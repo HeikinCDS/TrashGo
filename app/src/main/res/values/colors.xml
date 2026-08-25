@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="trashgo_primary">#0B6E4F</color>
+    <color name="trashgo_on_primary">#FFFFFF</color>
+    <color name="trashgo_primary_container">#B8F2D8</color>
+    <color name="trashgo_on_primary_container">#002116</color>
+    <color name="trashgo_secondary">#F2B134</color>
+    <color name="trashgo_background">#F7FAF8</color>
+    <color name="trashgo_surface">#FFFFFF</color>
+    <color name="trashgo_on_surface">#17201C</color>
+    <color name="trashgo_outline">#718078</color>
+    <color name="ic_launcher_background">#0B6E4F</color>
+</resources>
