@@ -49,6 +49,7 @@
                     android:text="@string/scan_card_body" />
 
                 <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnScanWaste"
                     style="@style/Widget.TrashGo.Button.Primary"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
