@@ -43,6 +43,10 @@
     <string name="error_password_length">Password must contain at least 6 characters.</string>
     <string name="error_password_mismatch">Passwords do not match.</string>
     <string name="error_login_failed">Unable to log in.</string>
+    <string name="error_no_account">No account was found for this email address.</string>
+    <string name="error_invalid_credentials">The email or password you entered is incorrect.</string>
+    <string name="error_too_many_attempts">Too many attempts. Please wait and try again.</string>
+    <string name="error_network">Check your internet connection and try again.</string>
     <string name="error_registration_failed">Unable to create the account.</string>
     <string name="error_profile_creation">Account created, but the profile could not be saved: %1$s</string>
     <string name="error_reset_failed">Unable to send the reset email.</string>
@@ -54,4 +58,16 @@
     <string name="badges">Badges</string>
     <string name="badges_empty">Complete recycling activities to unlock your first badge.</string>
     <string name="sign_out">Sign out</string>
+    <string name="skip">Skip</string>
+    <string name="back">Back</string>
+    <string name="next">Next</string>
+    <string name="get_started">Get started</string>
+    <string name="onboarding_welcome_title">Welcome to TrashGo</string>
+    <string name="onboarding_welcome_body">Recycle more confidently and turn responsible disposal into a rewarding habit.</string>
+    <string name="onboarding_scan_title">Identify your waste</string>
+    <string name="onboarding_scan_body">Use your camera to scan an item and let TrashGo suggest its waste category.</string>
+    <string name="onboarding_map_title">Find the right drop-off point</string>
+    <string name="onboarding_map_body">Discover nearby simulated recycling locations that accept your type of waste.</string>
+    <string name="onboarding_points_title">Recycle and earn points</string>
+    <string name="onboarding_points_body">Confirm your drop-off, build a streak, earn badges and compete on the leaderboard.</string>
 </resources>

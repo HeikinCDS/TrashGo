@@ -2,15 +2,27 @@ package com.pinduoduo.trashgo.ui.auth;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.Editable;
 import android.text.TextUtils;
+import android.text.TextWatcher;
+import android.util.Patterns;
 import android.view.View;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.google.firebase.FirebaseNetworkException;
+import com.google.firebase.FirebaseTooManyRequestsException;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException;
+import com.google.firebase.auth.FirebaseAuthInvalidUserException;
 import com.pinduoduo.trashgo.MainActivity;
+import com.pinduoduo.trashgo.R;
 import com.pinduoduo.trashgo.databinding.ActivityLoginBinding;
+import com.pinduoduo.trashgo.ui.onboarding.OnboardingActivity;
+
+import com.google.android.material.textfield.TextInputEditText;
+import com.google.android.material.textfield.TextInputLayout;
 
 public class LoginActivity extends AppCompatActivity {
     private ActivityLoginBinding binding;
@@ -19,9 +31,17 @@ public class LoginActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        if (!OnboardingActivity.isCompleted(this)) {
+            startActivity(new Intent(this, OnboardingActivity.class));
+            finish();
+            return;
+        }
         binding = ActivityLoginBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
         auth = FirebaseAuth.getInstance();
+
+        clearErrorWhenTyping(binding.emailInput, binding.emailLayout);
+        clearErrorWhenTyping(binding.passwordInput, binding.passwordLayout);
 
         binding.loginButton.setOnClickListener(view -> login());
         binding.createAccountLink.setOnClickListener(view ->
@@ -33,7 +53,7 @@ public class LoginActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
-        if (auth.getCurrentUser() != null) {
+        if (auth != null && auth.getCurrentUser() != null) {
             openMainScreen();
         }
     }
@@ -46,11 +66,18 @@ public class LoginActivity extends AppCompatActivity {
         binding.passwordLayout.setError(null);
 
         if (TextUtils.isEmpty(email)) {
-            binding.emailLayout.setError(getString(com.pinduoduo.trashgo.R.string.error_email_required));
+            binding.emailLayout.setError(getString(R.string.error_email_required));
+            binding.emailInput.requestFocus();
+            return;
+        }
+        if (!Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
+            binding.emailLayout.setError(getString(R.string.error_valid_email));
+            binding.emailInput.requestFocus();
             return;
         }
         if (TextUtils.isEmpty(password)) {
-            binding.passwordLayout.setError(getString(com.pinduoduo.trashgo.R.string.error_password_required));
+            binding.passwordLayout.setError(getString(R.string.error_password_required));
+            binding.passwordInput.requestFocus();
             return;
         }
 
@@ -61,15 +88,43 @@ public class LoginActivity extends AppCompatActivity {
                     if (task.isSuccessful()) {
                         openMainScreen();
                     } else {
-                        String message = task.getException() == null
-                                ? getString(com.pinduoduo.trashgo.R.string.error_login_failed)
-                                : task.getException().getLocalizedMessage();
-                        Toast.makeText(this, message, Toast.LENGTH_LONG).show();
+                        showLoginError(task.getException());
                     }
                 });
     }
 
-    private String textOf(com.google.android.material.textfield.TextInputEditText input) {
+    private void showLoginError(Exception error) {
+        if (error instanceof FirebaseAuthInvalidUserException) {
+            binding.emailLayout.setError(getString(R.string.error_no_account));
+            binding.emailInput.requestFocus();
+        } else if (error instanceof FirebaseAuthInvalidCredentialsException) {
+            binding.passwordLayout.setError(getString(R.string.error_invalid_credentials));
+            binding.passwordInput.requestFocus();
+        } else if (error instanceof FirebaseTooManyRequestsException) {
+            Toast.makeText(this, R.string.error_too_many_attempts, Toast.LENGTH_LONG).show();
+        } else if (error instanceof FirebaseNetworkException) {
+            Toast.makeText(this, R.string.error_network, Toast.LENGTH_LONG).show();
+        } else {
+            Toast.makeText(this, R.string.error_login_failed, Toast.LENGTH_LONG).show();
+        }
+    }
+
+    private void clearErrorWhenTyping(TextInputEditText input, TextInputLayout layout) {
+        input.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence text, int start, int count, int after) {}
+
+            @Override
+            public void onTextChanged(CharSequence text, int start, int before, int count) {
+                layout.setError(null);
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {}
+        });
+    }
+
+    private String textOf(TextInputEditText input) {
         return input.getText() == null ? "" : input.getText().toString().trim();
     }
 
