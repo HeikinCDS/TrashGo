@@ -1,6 +1,8 @@
 package com.pinduoduo.trashgo.ui.scan;
 
 
+import com.pinduoduo.trashgo.data.remote.GeminiResponse;
+import com.pinduoduo.trashgo.data.repository.GeminiRepository;
 import com.pinduoduo.trashgo.util.ImageUtils;
 
 import android.Manifest;
@@ -20,6 +22,7 @@ import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.camera.core.CameraSelector;
 import androidx.camera.core.ImageCapture;
 import androidx.camera.core.Preview;
@@ -27,6 +30,7 @@ import androidx.camera.lifecycle.ProcessCameraProvider;
 import androidx.fragment.app.Fragment;
 import androidx.core.content.ContextCompat;
 
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.common.util.concurrent.ListenableFuture;
 import com.pinduoduo.trashgo.databinding.FragmentScanBinding;
 
@@ -39,6 +43,7 @@ public class ScanFragment extends Fragment {
 
     private ImageCapture imageCapture;
     private ExecutorService cameraExecutor;
+    private GeminiRepository geminiRepository;
 
     private final ActivityResultLauncher<String> cameraPermissionLauncher =
             registerForActivityResult(
@@ -75,6 +80,7 @@ public class ScanFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         cameraExecutor = Executors.newSingleThreadExecutor();
+        geminiRepository = new GeminiRepository();
 
         binding.captureButton.setOnClickListener(v -> takePhoto());
         binding.btnClose.setOnClickListener(v -> getParentFragmentManager().popBackStack());
@@ -227,42 +233,13 @@ public class ScanFragment extends Fragment {
                 return;
             }
 
-            int originalWidth = bitmap.getWidth();
-            int originalHeight = bitmap.getHeight();
-
-            Bitmap resizedBitmap =
-                    ImageUtils.resizeBitmap(bitmap, 1024);
-
-            int resizedWidth = resizedBitmap.getWidth();
-            int resizedHeight = resizedBitmap.getHeight();
-
-            String base64 =
-                    ImageUtils.processImage(bitmap);
-
             Toast.makeText(
                     requireContext(),
                     "Image processed successfully!",
                     Toast.LENGTH_SHORT
             ).show();
 
-            System.out.println(
-                    "Original: "
-                            + originalWidth
-                            + " x "
-                            + originalHeight
-            );
-
-            System.out.println(
-                    "Resized: "
-                            + resizedWidth
-                            + " x "
-                            + resizedHeight
-            );
-
-            System.out.println(
-                    "Base64 length: "
-                            + base64.length()
-            );
+            sendToAi(bitmap);
 
         } catch (Exception e) {
 
@@ -274,6 +251,38 @@ public class ScanFragment extends Fragment {
                     Toast.LENGTH_SHORT
             ).show();
         }
+    }
+
+    private void sendToAi(Bitmap bitmap) {
+        binding.loadingOverlay.setVisibility(View.VISIBLE);
+
+        geminiRepository.classifyWaste(bitmap, new GeminiRepository.GeminiCallback() {
+            @Override
+            public void onSuccess(GeminiResponse response) {
+                if (isAdded()) {
+                    binding.loadingOverlay.setVisibility(View.GONE);
+                    showResultDialog(response);
+                }
+            }
+
+            @Override
+            public void onError(String message) {
+                if (isAdded()) {
+                    binding.loadingOverlay.setVisibility(View.GONE);
+                    Toast.makeText(requireContext(), message, Toast.LENGTH_LONG).show();
+                }
+            }
+        });
+    }
+
+    private void showResultDialog(GeminiResponse response) {
+        new MaterialAlertDialogBuilder(requireContext())
+                .setTitle("AI Identification Result")
+                .setMessage("Category: " + response.getCategory() + "\n\n" +
+                        "Confidence: " + Math.round(response.getConfidence() * 100) + "%\n\n" +
+                        "Tip: " + response.getTip())
+                .setPositiveButton("OK", null)
+                .show();
     }
 
     @Override

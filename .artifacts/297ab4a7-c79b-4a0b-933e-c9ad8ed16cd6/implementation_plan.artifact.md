@@ -1,43 +1,26 @@
-# Fix Camera Scanning and Navigation
+# Upgrade Gemini Model to 3.6 Flash
 
-The camera scanning functionality is currently not working because:
-1.  **Missing Navigation**: The "Scan waste" button on the Home screen is not wired to open the `ScanFragment`.
-2.  **Implementation Lifecycle**: `ScanFragment` initializes the camera in `onCreateView`, which can sometimes lead to issues with the `PreviewView` not being ready.
-3.  **Missing ID**: The button in `fragment_home.xml` lacks an ID for programmatic access.
+The 404 error is caused by the decommissioning of `gemini-2.5-flash` for new users. The API specifically recommends upgrading to `gemini-3.6-flash`.
 
 ## User Review Required
 
-> [!IMPORTANT]
-> I will modify `fragment_home.xml` to add an ID to the scan button and `HomeFragment.java` to handle the navigation. I will also refactor `ScanFragment.java` to improve reliability.
+> [!NOTE]
+> I am updating the model name to `gemini-3.6-flash` as recommended by the API error message.
+> Although the API also suggested the new stateful "Interactions API", our current implementation using `generateContent` remains fully supported for single-shot tasks like waste identification and is significantly simpler to maintain.
 
 ## Proposed Changes
 
-### [Layouts]
+### [Data Layer]
 
-#### [MODIFY] [fragment_home.xml](file:///C:/Users/User/Documents/School resources/Chin_JingLie/MobileAppGroupAssignment/TrashGo/app/src/main/res/layout/fragment_home.xml)
-- Add `android:id="@+id/btnScanWaste"` to the MaterialButton.
-
-#### [MODIFY] [fragment_scan.xml](file:///C:/Users/User/Documents/School resources/Chin_JingLie/MobileAppGroupAssignment/TrashGo/app/src/main/res/layout/fragment_scan.xml)
-- Add a "Close" button to allow users to return to the Home screen.
-
-### [UI Components]
-
-#### [MODIFY] [HomeFragment.java](file:///C:/Users/User/Documents/School resources/Chin_JingLie/MobileAppGroupAssignment/TrashGo/app/src/main/java/com/pinduoduo/trashgo/ui/home/HomeFragment.java)
-- Set a click listener on `btnScanWaste` to replace the current fragment with `ScanFragment`.
-
-#### [MODIFY] [ScanFragment.java](file:///C:/Users/User/Documents/School resources/Chin_JingLie/MobileAppGroupAssignment/TrashGo/app/src/main/java/com/pinduoduo/trashgo/ui/scan/ScanFragment.java)
-- Move camera initialization logic to `onViewCreated`.
-- Add a click listener for the new "Close" button.
-- Ensure `binding.previewView.getSurfaceProvider()` is used correctly when the view is ready.
+#### [MODIFY] [GeminiAPI.java](file:///C:/Users/User/Documents/School resources/Chin_JingLie/MobileAppGroupAssignment/TrashGo/app/src/main/java/com/pinduoduo/trashgo/data/remote/GeminiAPI.java)
+- Update the `@POST` annotation to use `gemini-3.6-flash`.
 
 ## Verification Plan
 
 ### Automated Tests
-- N/A
+- Run `app:assembleDebug` to ensure successful compilation.
 
 ### Manual Verification
-1.  Launch the app.
-2.  Click the "Scan waste" button on the Home screen.
-3.  Verify that the app requests camera permission (if not already granted).
-4.  Verify that the live camera preview is displayed.
-5.  Click the "Close" button and verify it returns to the Home screen.
+1. Launch the app and go to the Scan screen.
+2. Capture a photo.
+3. Verify that the identification results are returned correctly using the 3.6 model.

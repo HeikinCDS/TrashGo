@@ -5,11 +5,11 @@ import retrofit2.http.Body;
 import retrofit2.http.POST;
 import retrofit2.http.Query;
 
-public interface GeminiApiService {
+public interface GeminiAPI {
 
-    @POST("v1beta/models/gemini-2.0-flash:generateContent")
-    Call<String> generateContent(
+    @POST("v1/models/gemini-3.6-flash:generateContent")
+    Call<GeminiRawResponse> generateContent(
             @Query("key") String apiKey,
-            @Body Object request
+            @Body GeminiRequest request
     );
 }

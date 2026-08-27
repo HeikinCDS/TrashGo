@@ -1,12 +1,9 @@
 package com.pinduoduo.trashgo.util;
 
 import android.graphics.Bitmap;
-import android.os.Build;
-
-import androidx.annotation.RequiresApi;
+import android.util.Base64;
 
 import java.io.ByteArrayOutputStream;
-import java.util.Base64;
 
 public class ImageUtils {
 
@@ -73,11 +70,8 @@ public class ImageUtils {
     /**
      * Convert image bytes to Base64.
      */
-    @RequiresApi(api = Build.VERSION_CODES.O)
     public static String toBase64(byte[] imageBytes) {
-
-        return Base64.getEncoder()
-                .encodeToString(imageBytes);
+        return Base64.encodeToString(imageBytes, Base64.NO_WRAP);
     }
 
     /**
