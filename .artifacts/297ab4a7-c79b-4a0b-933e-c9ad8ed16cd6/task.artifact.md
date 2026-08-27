@@ -1,2 +1,0 @@
-- [x] Update `GeminiAPI.java` to use `gemini-3.6-flash`
-- [x] Verify build
