@@ -1,3 +1,12 @@
+import java.util.Properties
+
+val localProperties = Properties().apply {
+    val localPropertiesFile = rootProject.file("local.properties")
+    if (localPropertiesFile.exists()) {
+        localPropertiesFile.inputStream().use(::load)
+    }
+}
+
 plugins {
     id("com.android.application")
     id("com.google.gms.google-services")
@@ -13,10 +22,16 @@ android {
         targetSdk = 34
         versionCode = 1
         versionName = "1.0"
+
+        val geminiApiKey = localProperties.getProperty("GEMINI_API_KEY", "")
+            .replace("\\", "\\\\")
+            .replace("\"", "\\\"")
+        buildConfigField("String", "GEMINI_API_KEY", "\"$geminiApiKey\"")
     }
 
     buildFeatures {
         viewBinding = true
+        buildConfig = true
     }
 
     compileOptions {
