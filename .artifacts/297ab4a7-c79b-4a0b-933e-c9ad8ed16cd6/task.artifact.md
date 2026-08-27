@@ -1,0 +1,5 @@
+- [x] Add ID to scan button in `fragment_home.xml`
+- [x] Add Close button to `fragment_scan.xml`
+- [x] Implement navigation from `HomeFragment` to `ScanFragment`
+- [x] Refactor `ScanFragment.java` for reliable camera start and back navigation
+- [x] Verify functionality
