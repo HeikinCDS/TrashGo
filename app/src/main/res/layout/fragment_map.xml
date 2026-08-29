@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@color/trashgo_surface">
+
+    <androidx.fragment.app.FragmentContainerView
+        android:id="@+id/map_container"
+        android:name="com.google.android.gms.maps.SupportMapFragment"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="55" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/trashgo_divider" />
+
+    <TextView
+        android:id="@+id/map_heading"
+        style="@style/TextAppearance.TrashGo.Label"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingHorizontal="24dp"
+        android:paddingTop="16dp"
+        android:paddingBottom="4dp"
+        tools:text="8 DROP-OFF POINTS" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recycler_dropoffs"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="45"
+        android:clipToPadding="false"
+        android:paddingBottom="12dp"
+        tools:listitem="@layout/item_dropoff" />
+
+</LinearLayout>
