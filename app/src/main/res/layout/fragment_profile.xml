@@ -1,43 +1,86 @@
 <?xml version="1.0" encoding="utf-8"?>
+
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/trashgo_surface"
     android:fillViewport="true">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:padding="24dp">
+        android:paddingHorizontal="24dp"
+        android:paddingTop="28dp"
+        android:paddingBottom="28dp">
 
-        <TextView
-            style="@style/TextAppearance.TrashGo.Headline"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/profile_title" />
+        <!-- ===== Identity ===== -->
 
-        <TextView
-            android:id="@+id/profile_name"
-            style="@style/TextAppearance.TrashGo.Title"
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="28dp"
-            android:text="@string/trashgo_user" />
+            android:orientation="horizontal"
+            android:gravity="center_vertical">
 
-        <TextView
-            android:id="@+id/profile_email"
-            style="@style/TextAppearance.TrashGo.Body"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="4dp" />
+            <FrameLayout
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:background="@drawable/bg_avatar_circle">
+
+                <ImageView
+                    android:layout_width="28dp"
+                    android:layout_height="28dp"
+                    android:layout_gravity="center"
+                    android:src="@drawable/ic_profile"
+                    android:contentDescription="@null"
+                    app:tint="@color/trashgo_primary" />
+
+            </FrameLayout>
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical"
+                android:layout_marginStart="16dp">
+
+                <TextView
+                    android:id="@+id/profile_name"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:maxLines="1"
+                    android:ellipsize="end"
+                    android:textSize="19sp"
+                    android:textStyle="bold"
+                    android:letterSpacing="-0.015"
+                    android:textColor="@color/trashgo_on_surface"
+                    tools:text="Chin Zheng Hao" />
+
+                <TextView
+                    android:id="@+id/profile_email"
+                    style="@style/TextAppearance.TrashGo.Caption"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="2dp"
+                    android:maxLines="1"
+                    android:ellipsize="end"
+                    tools:text="chin.zh@1utar.my" />
+
+            </LinearLayout>
+
+        </LinearLayout>
 
         <ProgressBar
             android:id="@+id/profile_progress"
-            android:layout_width="32dp"
-            android:layout_height="32dp"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="20dp"
-            android:visibility="gone" />
+            android:indeterminateTint="@color/trashgo_primary"
+            android:visibility="gone"
+            tools:visibility="visible" />
 
         <TextView
             android:id="@+id/profile_status"
@@ -46,106 +89,138 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="12dp"
             android:gravity="center"
-            android:visibility="gone" />
+            android:textColor="@color/trashgo_error"
+            android:visibility="gone"
+            tools:visibility="visible"
+            tools:text="Profile statistics could not be loaded." />
+
+
+        <View
+            style="@style/Widget.TrashGo.Divider"
+            android:layout_marginTop="26dp" />
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="28dp"
+            android:orientation="horizontal"
             android:baselineAligned="false"
-            android:orientation="horizontal">
+            android:paddingVertical="20dp">
 
             <LinearLayout
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:gravity="center"
                 android:orientation="vertical"
-                android:padding="8dp">
+                android:gravity="center_horizontal">
+
                 <TextView
                     android:id="@+id/profile_points"
-                    style="@style/TextAppearance.TrashGo.Title"
+                    style="@style/TextAppearance.TrashGo.Stat"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="0" />
+                    android:text="@string/zero"
+                    tools:text="248" />
+
                 <TextView
-                    style="@style/TextAppearance.TrashGo.Body"
+                    style="@style/TextAppearance.TrashGo.Label"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="2dp"
                     android:text="@string/points" />
+
             </LinearLayout>
+
+            <View
+                android:layout_width="1dp"
+                android:layout_height="match_parent"
+                android:background="@color/trashgo_divider" />
 
             <LinearLayout
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:gravity="center"
                 android:orientation="vertical"
-                android:padding="8dp">
+                android:gravity="center_horizontal">
+
                 <TextView
                     android:id="@+id/profile_items"
-                    style="@style/TextAppearance.TrashGo.Title"
+                    style="@style/TextAppearance.TrashGo.Stat"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="0" />
+                    android:text="@string/zero"
+                    tools:text="31" />
+
                 <TextView
-                    style="@style/TextAppearance.TrashGo.Body"
+                    style="@style/TextAppearance.TrashGo.Label"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="2dp"
                     android:text="@string/recycled" />
+
             </LinearLayout>
+
+            <View
+                android:layout_width="1dp"
+                android:layout_height="match_parent"
+                android:background="@color/trashgo_divider" />
 
             <LinearLayout
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:gravity="center"
                 android:orientation="vertical"
-                android:padding="8dp">
+                android:gravity="center_horizontal">
+
                 <TextView
                     android:id="@+id/profile_streak"
-                    style="@style/TextAppearance.TrashGo.Title"
+                    style="@style/TextAppearance.TrashGo.Stat"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="0" />
+                    android:text="@string/zero"
+                    tools:text="6" />
+
                 <TextView
-                    style="@style/TextAppearance.TrashGo.Body"
+                    style="@style/TextAppearance.TrashGo.Label"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="2dp"
                     android:text="@string/day_streak" />
+
             </LinearLayout>
+
         </LinearLayout>
 
-        <com.google.android.material.card.MaterialCardView
-            style="@style/Widget.TrashGo.Card"
+        <View style="@style/Widget.TrashGo.Divider" />
+
+
+        <TextView
+            style="@style/TextAppearance.TrashGo.Label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="28dp"
+            android:text="@string/badges" />
+
+        <TextView
+            style="@style/TextAppearance.TrashGo.Body"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="28dp">
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:padding="20dp">
-                <TextView
-                    style="@style/TextAppearance.TrashGo.Title"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/badges" />
-                <TextView
-                    style="@style/TextAppearance.TrashGo.Body"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
-                    android:text="@string/badges_empty" />
-            </LinearLayout>
-        </com.google.android.material.card.MaterialCardView>
+            android:layout_marginTop="8dp"
+            android:text="@string/badges_empty" />
+
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:minHeight="32dp" />
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/sign_out_button"
-            style="@style/Widget.Material3.Button.OutlinedButton"
+            style="@style/Widget.TrashGo.Button.Tonal"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="28dp"
+            android:layout_marginTop="24dp"
             android:text="@string/sign_out" />
+
     </LinearLayout>
+
 </ScrollView>

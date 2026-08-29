@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:background="@color/trashgo_surface"
+    android:paddingHorizontal="24dp"
+    android:paddingBottom="24dp">
+
+    <View
+        android:layout_width="36dp"
+        android:layout_height="4dp"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="18dp"
+        android:background="@color/trashgo_divider_strong" />
+
+    <TextView
+        android:id="@+id/sheet_name"
+        style="@style/TextAppearance.TrashGo.Title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        tools:text="Library Entrance Recycling Station (Simulated)" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginVertical="16dp"
+        android:background="@color/trashgo_divider" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:baselineAligned="false">
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <TextView
+                style="@style/TextAppearance.TrashGo.Label"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Distance" />
+
+            <TextView
+                android:id="@+id/sheet_distance"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="2dp"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:fontFeatureSettings="tnum"
+                android:textColor="@color/trashgo_primary"
+                tools:text="90 m" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <TextView
+                style="@style/TextAppearance.TrashGo.Label"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Open" />
+
+            <TextView
+                android:id="@+id/sheet_hours"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="2dp"
+                android:textSize="15sp"
+                android:textColor="@color/trashgo_on_surface"
+                tools:text="Daily, 8:00 AM–10:00 PM" />
+        </LinearLayout>
+    </LinearLayout>
+
+    <TextView
+        style="@style/TextAppearance.TrashGo.Label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="18dp"
+        android:text="Accepts" />
+
+    <TextView
+        android:id="@+id/sheet_accepted"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="2dp"
+        android:textSize="15sp"
+        android:textColor="@color/trashgo_on_surface"
+        tools:text="Plastic, Paper, Metal" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/sheet_navigate"
+        style="@style/Widget.TrashGo.Button.Primary"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        android:text="Navigate here" />
+
+</LinearLayout>
