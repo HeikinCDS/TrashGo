@@ -19,7 +19,7 @@ import com.pinduoduo.trashgo.ui.auth.LoginActivity;
 import java.util.Arrays;
 import java.util.List;
 
-public class OnboardingActivity extends AppCompatActivity {
+public class    OnboardingActivity extends AppCompatActivity {
     private static final String PREFERENCES = "trashgo_onboarding";
     private static final String COMPLETED = "completed";
 

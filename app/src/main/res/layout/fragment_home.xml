@@ -1,61 +1,238 @@
 <?xml version="1.0" encoding="utf-8"?>
+
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/trashgo_surface"
     android:fillViewport="true">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:padding="24dp">
+        android:paddingHorizontal="24dp"
+        android:paddingTop="28dp"
+        android:paddingBottom="28dp">
 
         <TextView
-            style="@style/TextAppearance.TrashGo.Headline"
+            style="@style/TextAppearance.TrashGo.Label"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:text="@string/home_greeting" />
+
+        <TextView
+            style="@style/TextAppearance.TrashGo.Display"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
             android:text="@string/home_title" />
+
+
+
+        <View
+            style="@style/Widget.TrashGo.Divider"
+            android:layout_marginTop="26dp" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:baselineAligned="false"
+            android:paddingVertical="20dp">
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical"
+                android:gravity="center_horizontal">
+
+                <TextView
+                    android:id="@+id/home_points"
+                    style="@style/TextAppearance.TrashGo.Stat"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/zero"
+                    tools:text="248" />
+
+                <TextView
+                    style="@style/TextAppearance.TrashGo.Label"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="2dp"
+                    android:text="@string/points" />
+
+            </LinearLayout>
+
+            <View
+                android:layout_width="1dp"
+                android:layout_height="match_parent"
+                android:background="@color/trashgo_divider" />
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical"
+                android:gravity="center_horizontal">
+
+                <TextView
+                    android:id="@+id/home_items"
+                    style="@style/TextAppearance.TrashGo.Stat"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/zero"
+                    tools:text="31" />
+
+                <TextView
+                    style="@style/TextAppearance.TrashGo.Label"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="2dp"
+                    android:text="@string/recycled" />
+
+            </LinearLayout>
+
+            <View
+                android:layout_width="1dp"
+                android:layout_height="match_parent"
+                android:background="@color/trashgo_divider" />
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical"
+                android:gravity="center_horizontal">
+
+                <TextView
+                    android:id="@+id/home_streak"
+                    style="@style/TextAppearance.TrashGo.Stat"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/zero"
+                    tools:text="6" />
+
+                <TextView
+                    style="@style/TextAppearance.TrashGo.Label"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="2dp"
+                    android:text="@string/day_streak" />
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <View style="@style/Widget.TrashGo.Divider" />
+
+        <!-- ===== Primary action ===== -->
+
+        <TextView
+            style="@style/TextAppearance.TrashGo.Title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="28dp"
+            android:text="@string/scan_card_title" />
 
         <TextView
             style="@style/TextAppearance.TrashGo.Body"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:text="@string/home_subtitle" />
-
-        <com.google.android.material.card.MaterialCardView
-            style="@style/Widget.TrashGo.Card"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="24dp">
+            android:layout_marginTop="6dp"
+            android:text="@string/scan_card_body" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnScanWaste"
+            style="@style/Widget.TrashGo.Button.Primary"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="@string/scan_waste"
+            app:icon="@drawable/ic_scan_waste"
+            app:iconGravity="textStart"
+            app:iconPadding="10dp"
+            app:iconSize="20dp"
+            app:iconTint="@color/trashgo_on_primary" />
+
+
+        <TextView
+            style="@style/TextAppearance.TrashGo.Label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="32dp"
+            android:text="@string/home_nearest" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:layout_marginTop="12dp">
+
+            <FrameLayout
+                android:layout_width="38dp"
+                android:layout_height="38dp"
+                android:background="@drawable/bg_tile_rounded">
+
+                <ImageView
+                    android:layout_width="19dp"
+                    android:layout_height="19dp"
+                    android:layout_gravity="center"
+                    android:src="@drawable/ic_map"
+                    android:contentDescription="@null"
+                    app:tint="@color/trashgo_primary" />
+
+            </FrameLayout>
 
             <LinearLayout
-                android:layout_width="match_parent"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:layout_weight="1"
                 android:orientation="vertical"
-                android:padding="20dp">
+                android:layout_marginStart="14dp">
 
                 <TextView
-                    style="@style/TextAppearance.TrashGo.Title"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/scan_card_title" />
-
-                <TextView
-                    style="@style/TextAppearance.TrashGo.Body"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="4dp"
-                    android:text="@string/scan_card_body" />
-
-                <com.google.android.material.button.MaterialButton
-                    android:id="@+id/btnScanWaste"
-                    style="@style/Widget.TrashGo.Button.Primary"
+                    android:id="@+id/home_nearest_name"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="16dp"
-                    android:text="@string/scan_waste" />
+                    android:maxLines="1"
+                    android:ellipsize="end"
+                    android:textSize="15sp"
+                    android:textStyle="bold"
+                    android:textColor="@color/trashgo_on_surface"
+                    android:text="@string/home_nearest_empty"
+                    tools:text="Library Entrance" />
+
+                <TextView
+                    android:id="@+id/home_nearest_types"
+                    style="@style/TextAppearance.TrashGo.Caption"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="1dp"
+                    android:maxLines="1"
+                    android:ellipsize="end"
+                    android:text="@string/home_nearest_hint"
+                    tools:text="Plastic, Paper, Metal" />
+
             </LinearLayout>
-        </com.google.android.material.card.MaterialCardView>
+
+            <TextView
+                android:id="@+id/home_nearest_distance"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="12dp"
+                android:textSize="15sp"
+                android:textStyle="bold"
+                android:fontFeatureSettings="tnum"
+                android:textColor="@color/trashgo_primary"
+                android:text="@string/em_dash"
+                tools:text="80 m" />
+
+        </LinearLayout>
+
     </LinearLayout>
+
 </ScrollView>

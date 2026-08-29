@@ -1,5 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="app_slogan">Scan. Drop. Earn.</string>
+    <string name="home_greeting">Welcome back</string>
+    <string name="home_nearest">Nearest drop-off</string>
+    <string name="home_nearest_empty">Finding nearby points…</string>
+    <string name="home_nearest_hint">Open the Map tab to see all locations</string>
+    <string name="scan_hint">Centre the item in the frame</string>
+    <string name="scan_analysing">Identifying your item…</string>
+    <string name="zero">0</string>
+    <string name="em_dash">—</string>
     <string name="app_name">TrashGo</string>
     <string name="nav_home">Home</string>
     <string name="nav_map">Map</string>
