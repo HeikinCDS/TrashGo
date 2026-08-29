@@ -1,5 +1,0 @@
-- [ ] Fix `fragment_scan_result.xml` (add XML header)
-- [ ] Create `ScanResultFragment.java` with `newInstance` pattern
-- [ ] Delete old `ScanFragmentResult.java`
-- [ ] Refactor `ScanFragment.java` to use `GeminiRepository` and navigate correctly
-- [ ] Verify build and navigation flow
