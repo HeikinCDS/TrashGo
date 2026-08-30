@@ -17,6 +17,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.pinduoduo.trashgo.R;
 import com.pinduoduo.trashgo.databinding.FragmentProfileBinding;
 import com.pinduoduo.trashgo.ui.auth.LoginActivity;
+import com.pinduoduo.trashgo.ui.settings.SettingsSheet;
 
 public class ProfileFragment extends Fragment {
     private FragmentProfileBinding binding;
@@ -25,8 +26,11 @@ public class ProfileFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
+
         binding = FragmentProfileBinding.inflate(inflater, container, false);
         binding.signOutButton.setOnClickListener(view -> signOut());
+        binding.profileSettings.setOnClickListener(v ->
+                SettingsSheet.show(getParentFragmentManager()));
         loadProfile();
         return binding.getRoot();
     }

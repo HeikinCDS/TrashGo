@@ -7,27 +7,26 @@ import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
-import android.util.Log;
 import android.provider.Settings;
+import android.util.Log;
 import android.view.View;
 import android.view.animation.AccelerateDecelerateInterpolator;
 import android.view.animation.DecelerateInterpolator;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.pinduoduo.trashgo.R;
 import com.pinduoduo.trashgo.databinding.ActivitySplashBinding;
 import com.pinduoduo.trashgo.ui.auth.LoginActivity;
 import com.pinduoduo.trashgo.ui.onboarding.OnboardingActivity;
+import com.pinduoduo.trashgo.util.Prefs;
 
 public class SplashActivity extends AppCompatActivity {
 
     private static final String TAG = "SplashActivity";
 
-    /** How long the splash stays up once the animation has played. */
-    private static final long HOLD_MS = 3000L;
-
-    /** Shorter hold when the user has asked the system not to animate. */
-    private static final long HOLD_REDUCED_MS = 2400L;
+    private static final long HOLD_MS = 1900L;
+    private static final long HOLD_REDUCED_MS = 900L;
 
     private ActivitySplashBinding binding;
     private MediaPlayer chime;
@@ -39,6 +38,8 @@ public class SplashActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         binding = ActivitySplashBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
+
+        Prefs.apply(this);
 
         boolean animate = animationsEnabled();
 
@@ -68,7 +69,6 @@ public class SplashActivity extends AppCompatActivity {
         rise(binding.splashSlogan, 520);
     }
 
-
     private void rise(View view, long delayMs) {
         float offset = 12f * getResources().getDisplayMetrics().density;
         view.setTranslationY(offset);
@@ -81,31 +81,30 @@ public class SplashActivity extends AppCompatActivity {
                 .start();
     }
 
-
     private boolean animationsEnabled() {
         float scale = Settings.Global.getFloat(
                 getContentResolver(), Settings.Global.ANIMATOR_DURATION_SCALE, 1f);
         return scale > 0f;
     }
 
-
     private void playChime() {
-        AudioManager audio = (AudioManager) getSystemService(AUDIO_SERVICE);
-        if (audio != null && audio.getRingerMode() != AudioManager.RINGER_MODE_NORMAL) {
-            Log.i(TAG, "Chime skipped: phone is on silent or vibrate");
+        if (!Prefs.splashSound(this)) {
+            Log.i(TAG, "Chime skipped: turned off in Settings");
             return;
         }
 
-        int soundId = getResources().getIdentifier("chime", "raw", getPackageName());
-        if (soundId == 0) {
-            Log.i(TAG, "Chime skipped: no res/raw/chime.ogg in this build");
+        AudioManager audio = (AudioManager) getSystemService(AUDIO_SERVICE);
+        if (audio != null && audio.getRingerMode() != AudioManager.RINGER_MODE_NORMAL) {
+            Log.i(TAG, "Chime skipped: ringer mode is "
+                    + (audio.getRingerMode() == AudioManager.RINGER_MODE_SILENT
+                    ? "SILENT" : "VIBRATE"));
             return;
         }
 
         try {
-            chime = MediaPlayer.create(this, soundId);
+            chime = MediaPlayer.create(this, R.raw.chime);
             if (chime == null) {
-                Log.w(TAG, "Chime skipped: MediaPlayer could not decode the file");
+                Log.w(TAG, "Chime skipped: MediaPlayer.create returned null");
                 return;
             }
             chime.setAudioAttributes(new AudioAttributes.Builder()
@@ -117,7 +116,6 @@ public class SplashActivity extends AppCompatActivity {
             chime.start();
             Log.i(TAG, "Chime playing");
         } catch (Exception e) {
-            // A splash chime is never worth crashing over.
             Log.w(TAG, "Chime failed", e);
             release();
         }
@@ -130,20 +128,17 @@ public class SplashActivity extends AppCompatActivity {
         }
     }
 
-
     private void advance() {
         if (advanced || isFinishing()) {
             return;
         }
         advanced = true;
 
-
         Intent next = OnboardingActivity.isCompleted(this)
                 ? new Intent(this, LoginActivity.class)
                 : new Intent(this, OnboardingActivity.class);
 
         startActivity(next);
-
         overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
         finish();
     }

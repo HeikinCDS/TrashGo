@@ -28,6 +28,7 @@ import com.pinduoduo.trashgo.data.model.WasteCategory;
 import com.pinduoduo.trashgo.data.repository.DropOffRepository;
 import com.pinduoduo.trashgo.databinding.FragmentMapBinding;
 import com.pinduoduo.trashgo.util.LocationHelper;
+import com.pinduoduo.trashgo.util.Prefs;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -101,9 +102,12 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         return binding.getRoot();
     }
 
+
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+
+        Prefs.apply(requireContext());
 
         repository = new DropOffRepository();
         locationHelper = new LocationHelper(requireContext());
