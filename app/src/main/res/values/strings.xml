@@ -91,4 +91,20 @@
     <string name="onboarding_map_body">Discover nearby simulated recycling locations that accept your type of waste.</string>
     <string name="onboarding_points_title">Recycle and earn points</string>
     <string name="onboarding_points_body">Confirm your drop-off, build a streak, earn badges and compete on the leaderboard.</string>
+    <string name="result_identified">Identified as</string>
+    <string name="result_confidence">%1$d%% confident</string>
+    <string name="result_low_confidence">Not a confident match. Check the item yourself before dropping it off.</string>
+    <string name="result_tip_label">How to recycle it</string>
+    <string name="result_no_tip">No tip available for this item.</string>
+    <string name="result_unknown">Unknown item</string>
+    <string name="result_find">Find a drop-off</string>
+    <string name="result_again">Scan another item</string>
+    <string name="waste_plastic">Plastic</string>
+    <string name="waste_paper">Paper</string>
+    <string name="waste_glass">Glass</string>
+    <string name="waste_metal">Metal</string>
+    <string name="waste_ewaste">E-waste</string>
+    <string name="waste_organic">Organic</string>
+    <string name="waste_general">General waste</string>
+    <string name="result_photo_desc">Photo of the scanned item</string>
 </resources>

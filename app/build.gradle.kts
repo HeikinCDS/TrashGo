@@ -69,4 +69,6 @@ dependencies {
     implementation("com.google.android.gms:play-services-location:21.3.0")
     implementation("androidx.recyclerview:recyclerview:1.3.2")
     testImplementation("junit:junit:4.13.2")
+
+    implementation("androidx.exifinterface:exifinterface:1.3.7")
 }

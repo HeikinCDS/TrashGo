@@ -30,8 +30,8 @@ import androidx.camera.lifecycle.ProcessCameraProvider;
 import androidx.fragment.app.Fragment;
 import androidx.core.content.ContextCompat;
 
-import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.common.util.concurrent.ListenableFuture;
+import com.pinduoduo.trashgo.R;
 import com.pinduoduo.trashgo.databinding.FragmentScanBinding;
 
 import java.util.concurrent.ExecutorService;
@@ -185,19 +185,9 @@ public class ScanFragment extends Fragment {
 
                         Uri imageUri = Uri.fromFile(photoFile);
 
-                        requireActivity().runOnUiThread(() -> {
-
-                            Toast.makeText(
-                                    requireContext(),
-                                    "Photo captured!",
-                                    Toast.LENGTH_SHORT
-                            ).show();
-
-                            processCapturedImage(imageUri);
-                        });
+                        requireActivity().runOnUiThread(() ->
+                                processCapturedImage(imageUri));
                     }
-
-
 
                     @Override
                     public void onError(
@@ -233,13 +223,7 @@ public class ScanFragment extends Fragment {
                 return;
             }
 
-            Toast.makeText(
-                    requireContext(),
-                    "Image processed successfully!",
-                    Toast.LENGTH_SHORT
-            ).show();
-
-            sendToAi(bitmap);
+            sendToAi(bitmap, imageUri.getPath());
 
         } catch (Exception e) {
 
@@ -253,7 +237,7 @@ public class ScanFragment extends Fragment {
         }
     }
 
-    private void sendToAi(Bitmap bitmap) {
+    private void sendToAi(Bitmap bitmap, String photoPath) {
         binding.loadingOverlay.setVisibility(View.VISIBLE);
 
         geminiRepository.classifyWaste(bitmap, new GeminiRepository.GeminiCallback() {
@@ -261,7 +245,7 @@ public class ScanFragment extends Fragment {
             public void onSuccess(GeminiResponse response) {
                 if (isAdded()) {
                     binding.loadingOverlay.setVisibility(View.GONE);
-                    showResultDialog(response);
+                    showResult(response, photoPath);
                 }
             }
 
@@ -275,14 +259,16 @@ public class ScanFragment extends Fragment {
         });
     }
 
-    private void showResultDialog(GeminiResponse response) {
-        new MaterialAlertDialogBuilder(requireContext())
-                .setTitle("AI Identification Result")
-                .setMessage("Category: " + response.getCategory() + "\n\n" +
-                        "Confidence: " + Math.round(response.getConfidence() * 100) + "%\n\n" +
-                        "Tip: " + response.getTip())
-                .setPositiveButton("OK", null)
-                .show();
+    private void showResult(GeminiResponse response, String photoPath) {
+        getParentFragmentManager()
+                .beginTransaction()
+                .replace(R.id.fragment_container, ResultFragment.newInstance(
+                        response.getCategory(),
+                        response.getConfidence(),
+                        response.getTip(),
+                        photoPath))
+                .addToBackStack(null)
+                .commit();
     }
 
     @Override
