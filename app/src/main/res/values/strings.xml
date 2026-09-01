@@ -72,6 +72,9 @@
     <string name="error_reset_failed">Unable to send the reset email.</string>
     <string name="trashgo_user">TrashGo user</string>
     <string name="profile_load_error">Profile statistics could not be loaded.</string>
+    <string name="change_profile_photo">Change profile picture</string>
+    <string name="profile_photo_updated">Profile picture updated.</string>
+    <string name="profile_photo_error">Couldn\'t save that picture. Try another image.</string>
     <string name="points">Points</string>
     <string name="recycled">Recycled</string>
     <string name="day_streak">Day streak</string>
