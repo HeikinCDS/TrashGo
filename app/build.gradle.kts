@@ -71,4 +71,5 @@ dependencies {
     testImplementation("junit:junit:4.13.2")
 
     implementation("androidx.exifinterface:exifinterface:1.3.7")
+    implementation("com.journeyapps:zxing-android-embedded:4.3.0")
 }

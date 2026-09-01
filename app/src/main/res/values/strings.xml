@@ -107,4 +107,19 @@
     <string name="waste_organic">Organic</string>
     <string name="waste_general">General waste</string>
     <string name="result_photo_desc">Photo of the scanned item</string>
+    <string name="claim_button">Claim points</string>
+    <string name="claim_done">Done</string>
+    <string name="claim_checking">Checking…</string>
+    <string name="claim_scan_prompt">Scan the code at the drop-off point</string>
+    <string name="claim_need_scan">Scan an item first, then come back here to claim.</string>
+    <string name="claim_success_headline">+%1$d points</string>
+    <string name="claim_success_detail">%1$s · %2$d day streak</string>
+    <string name="claim_failed_headline">Couldn\'t verify</string>
+    <string name="claim_bad_payload">That isn\'t a TrashGo code. Scan the code on the drop-off point\'s sign.</string>
+    <string name="claim_wrong_point">That code belongs to a different drop-off point.</string>
+    <string name="claim_category_not_accepted">This point doesn\'t accept that material. Try another one on the map.</string>
+    <string name="claim_no_location">Can\'t check your location. Turn location on and try again.</string>
+    <string name="claim_mock_location">Mock locations are switched on. Turn them off to claim points.</string>
+    <string name="claim_too_far">You need to be at the drop-off point. Get within 100 m and try again.</string>
+    <string name="claim_cooldown">You\'ve already claimed here recently. Try again in a little while.</string>
 </resources>

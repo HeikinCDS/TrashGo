@@ -5,6 +5,8 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.activity.result.ActivityResultLauncher;
@@ -26,9 +28,15 @@ import com.pinduoduo.trashgo.R;
 import com.pinduoduo.trashgo.data.model.DropOffPoint;
 import com.pinduoduo.trashgo.data.model.WasteCategory;
 import com.pinduoduo.trashgo.data.repository.DropOffRepository;
+import com.pinduoduo.trashgo.data.repository.FirestorePointsRepository;
+import com.pinduoduo.trashgo.data.repository.PointsRepository;
+import com.pinduoduo.trashgo.data.verify.VerificationResult;
 import com.pinduoduo.trashgo.databinding.FragmentMapBinding;
 import com.pinduoduo.trashgo.util.LocationHelper;
 import com.pinduoduo.trashgo.util.Prefs;
+import com.journeyapps.barcodescanner.ScanContract;
+import com.journeyapps.barcodescanner.ScanIntentResult;
+import com.journeyapps.barcodescanner.ScanOptions;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -47,7 +55,12 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
     private DropOffRepository repository;
     private LocationHelper locationHelper;
     private DropOffAdapter adapter;
+    private PointsRepository pointsRepository;
     private ActivityResultLauncher<String[]> permissionLauncher;
+    private ActivityResultLauncher<ScanOptions> qrLauncher;
+
+    /** The point whose QR code the user is currently scanning. */
+    @Nullable private DropOffPoint pendingPoint;
 
     private final List<DropOffPoint> allPoints = new ArrayList<>();
     private boolean pointsLoaded = false;
@@ -92,6 +105,8 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
                         renderIfReady();
                     }
                 });
+
+        qrLauncher = registerForActivityResult(new ScanContract(), this::onQrScanned);
     }
 
     @Nullable
@@ -102,7 +117,6 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         return binding.getRoot();
     }
 
-
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
@@ -111,6 +125,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
 
         repository = new DropOffRepository();
         locationHelper = new LocationHelper(requireContext());
+        pointsRepository = new FirestorePointsRepository();
 
         adapter = new DropOffAdapter(this::showDetail);
         binding.recyclerDropoffs.setLayoutManager(new LinearLayoutManager(requireContext()));
@@ -243,6 +258,11 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
             sheet.dismiss();
         });
 
+        v.findViewById(R.id.sheet_claim).setOnClickListener(btn -> {
+            sheet.dismiss();
+            startClaim(p);
+        });
+
         // also recentre the map behind the sheet
         if (googleMap != null) {
             googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(
@@ -252,7 +272,6 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         sheet.setContentView(v);
         sheet.show();
     }
-
 
     private void startNavigation(@NonNull DropOffPoint p) {
         android.net.Uri uri = android.net.Uri.parse(String.format(Locale.US,
@@ -274,6 +293,132 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
                 Toast.makeText(requireContext(),
                         "No maps app installed", Toast.LENGTH_LONG).show();
             }
+        }
+    }
+
+    // ------------------------------------------------------------------
+    // Claiming points
+    // ------------------------------------------------------------------
+
+    private void startClaim(@NonNull DropOffPoint p) {
+        if (filterCategory == null) {
+            Toast.makeText(requireContext(), R.string.claim_need_scan, Toast.LENGTH_LONG).show();
+            return;
+        }
+        pendingPoint = p;
+
+        ScanOptions options = new ScanOptions();
+        options.setDesiredBarcodeFormats(ScanOptions.QR_CODE);
+        options.setPrompt(getString(R.string.claim_scan_prompt));
+        options.setBeepEnabled(false);
+        options.setOrientationLocked(false);
+        qrLauncher.launch(options);
+    }
+
+    private void onQrScanned(@Nullable ScanIntentResult result) {
+        if (!isAdded() || result == null || result.getContents() == null) {
+            pendingPoint = null;
+            return;
+        }
+        final DropOffPoint point = pendingPoint;
+        final WasteCategory category = filterCategory;
+        pendingPoint = null;
+
+        if (point == null || category == null) {
+            return;
+        }
+
+        final String payload = result.getContents();
+
+        Toast.makeText(requireContext(), R.string.claim_checking, Toast.LENGTH_SHORT).show();
+
+        locationHelper.currentLocation(location ->
+                submitClaim(payload, point, category, location));
+    }
+
+    private void submitClaim(@NonNull String payload,
+                             @NonNull DropOffPoint point,
+                             @NonNull WasteCategory category,
+                             @Nullable Location location) {
+        if (!isAdded()) {
+            return;
+        }
+        pointsRepository.claim(payload, point, category, location,
+                new PointsRepository.ClaimCallback() {
+                    @Override
+                    public void onAwarded(int pointsAwarded, long newTotal, int newStreak) {
+                        if (!isAdded()) return;
+                        showClaimResult(true,
+                                getString(R.string.claim_success_headline, pointsAwarded),
+                                getString(R.string.claim_success_detail,
+                                        getString(labelFor(category)), newStreak));
+                    }
+
+                    @Override
+                    public void onRejected(@NonNull VerificationResult reason) {
+                        if (!isAdded()) return;
+                        showClaimResult(false,
+                                getString(R.string.claim_failed_headline),
+                                getString(messageFor(reason)));
+                    }
+
+                    @Override
+                    public void onError(@NonNull String message) {
+                        if (!isAdded()) return;
+                        showClaimResult(false,
+                                getString(R.string.claim_failed_headline), message);
+                    }
+                });
+    }
+
+    private void showClaimResult(boolean success, @NonNull String headline,
+                                 @NonNull String detail) {
+        com.google.android.material.bottomsheet.BottomSheetDialog sheet =
+                new com.google.android.material.bottomsheet.BottomSheetDialog(requireContext());
+
+        View v = LayoutInflater.from(requireContext())
+                .inflate(R.layout.sheet_claim_result, null);
+
+        ImageView icon = v.findViewById(R.id.claim_icon);
+        icon.setImageResource(success ? R.drawable.ic_check : R.drawable.ic_close);
+        icon.setColorFilter(androidx.core.content.ContextCompat.getColor(requireContext(),
+                success ? R.color.trashgo_primary : R.color.trashgo_error));
+
+        ((TextView) v.findViewById(R.id.claim_headline)).setText(headline);
+        ((TextView) v.findViewById(R.id.claim_detail)).setText(detail);
+        v.findViewById(R.id.claim_done).setOnClickListener(b -> sheet.dismiss());
+
+        sheet.setContentView(v);
+        sheet.show();
+
+        if (success) {
+            requestFix();
+        }
+    }
+
+    private static int labelFor(@NonNull WasteCategory category) {
+        switch (category) {
+            case PLASTIC: return R.string.waste_plastic;
+            case PAPER:   return R.string.waste_paper;
+            case GLASS:   return R.string.waste_glass;
+            case METAL:   return R.string.waste_metal;
+            case EWASTE:  return R.string.waste_ewaste;
+            case ORGANIC: return R.string.waste_organic;
+            case GENERAL: return R.string.waste_general;
+            default:      return R.string.waste_general;
+        }
+    }
+
+    private static int messageFor(@NonNull VerificationResult reason) {
+        switch (reason) {
+            case BAD_PAYLOAD:           return R.string.claim_bad_payload;
+            case WRONG_POINT:           return R.string.claim_wrong_point;
+            case CATEGORY_NOT_ACCEPTED: return R.string.claim_category_not_accepted;
+            case NO_LOCATION:           return R.string.claim_no_location;
+            case MOCK_LOCATION:         return R.string.claim_mock_location;
+            case TOO_FAR:               return R.string.claim_too_far;
+            case COOLDOWN:              return R.string.claim_cooldown;
+            default:                    return R.string.claim_failed_headline;
         }
     }
 
