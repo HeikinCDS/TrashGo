@@ -4,7 +4,6 @@ import android.graphics.Bitmap;
 import android.util.Log;
 
 import com.google.gson.Gson;
-import com.pinduoduo.trashgo.BuildConfig;
 import com.pinduoduo.trashgo.data.remote.GeminiAPI;
 import com.pinduoduo.trashgo.data.remote.GeminiRawResponse;
 import com.pinduoduo.trashgo.data.remote.GeminiRequest;
@@ -19,7 +18,7 @@ import retrofit2.Response;
 public class GeminiRepository {
 
     private final GeminiAPI apiService;
-    private final String apiKey = BuildConfig.GEMINI_API_KEY;
+    private final String apiKey = "AQ.Ab8RN6IHJwTe9EIM1WkHKE6YxYeLwb9P0Tt7r0ChezMmypDK8A"; // User will fill this in
     private final Gson gson = new Gson();
 
     public GeminiRepository() {
@@ -32,11 +31,6 @@ public class GeminiRepository {
     }
 
     public void classifyWaste(Bitmap bitmap, GeminiCallback callback) {
-        if (apiKey == null || apiKey.trim().isEmpty()) {
-            callback.onError("Gemini API key is not configured.");
-            return;
-        }
-
         String base64Image = ImageUtils.processImage(bitmap);
         
         String prompt = "Analyze this image and identify the waste item. " +

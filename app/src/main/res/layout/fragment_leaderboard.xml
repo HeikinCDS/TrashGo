@@ -1,206 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:gravity="center"
     android:orientation="vertical"
-    android:background="@color/trashgo_surface"
-    android:paddingTop="28dp">
+    android:padding="24dp">
 
     <TextView
-        style="@style/TextAppearance.TrashGo.Display"
-        android:layout_width="match_parent"
+        style="@style/TextAppearance.TrashGo.Headline"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:paddingHorizontal="24dp"
         android:text="@string/leaderboard_title" />
 
     <TextView
         style="@style/TextAppearance.TrashGo.Body"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:paddingHorizontal="24dp"
-        android:layout_marginTop="4dp"
-        android:text="See top recyclers &amp; compare points with bot accounts!" />
-
-    <!-- ===== Top 3 Podium Cards ===== -->
-    <LinearLayout
-        android:id="@+id/podium_container"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:paddingHorizontal="20dp"
-        android:layout_marginTop="20dp"
-        android:gravity="bottom">
-
-        <!-- 2nd Place (Left) -->
-        <com.google.android.material.card.MaterialCardView
-            android:id="@+id/podium_2nd_card"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:layout_marginEnd="6dp"
-            app:cardCornerRadius="16dp"
-            app:cardElevation="2dp"
-            app:strokeWidth="2dp"
-            app:strokeColor="#9E9E9E"
-            app:cardBackgroundColor="@color/trashgo_surface">
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:gravity="center"
-                android:padding="12dp">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textSize="22sp"
-                    android:text="🥈" />
-
-                <TextView
-                    android:id="@+id/podium_2nd_name"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="4dp"
-                    android:textSize="13sp"
-                    android:textStyle="bold"
-                    android:maxLines="1"
-                    android:ellipsize="end"
-                    tools:text="RecycleQueen" />
-
-                <TextView
-                    android:id="@+id/podium_2nd_points"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="2dp"
-                    android:textSize="12sp"
-                    android:textStyle="bold"
-                    android:textColor="@color/trashgo_primary"
-                    tools:text="1,200 pts" />
-
-            </LinearLayout>
-
-        </com.google.android.material.card.MaterialCardView>
-
-        <!-- 1st Place (Center - Taller) -->
-        <com.google.android.material.card.MaterialCardView
-            android:id="@+id/podium_1st_card"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1.2"
-            app:cardCornerRadius="18dp"
-            app:cardElevation="4dp"
-            app:strokeWidth="3dp"
-            app:strokeColor="#FFD700"
-            app:cardBackgroundColor="@color/trashgo_surface">
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:gravity="center"
-                android:padding="16dp">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textSize="28sp"
-                    android:text="🥇" />
-
-                <TextView
-                    android:id="@+id/podium_1st_name"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="6dp"
-                    android:textSize="14sp"
-                    android:textStyle="bold"
-                    android:maxLines="1"
-                    android:ellipsize="end"
-                    tools:text="EcoMaster_99" />
-
-                <TextView
-                    android:id="@+id/podium_1st_points"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="2dp"
-                    android:textSize="13sp"
-                    android:textStyle="bold"
-                    android:textColor="@color/trashgo_primary"
-                    tools:text="1,450 pts" />
-
-            </LinearLayout>
-
-        </com.google.android.material.card.MaterialCardView>
-
-        <!-- 3rd Place (Right) -->
-        <com.google.android.material.card.MaterialCardView
-            android:id="@+id/podium_3rd_card"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:layout_marginStart="6dp"
-            app:cardCornerRadius="16dp"
-            app:cardElevation="2dp"
-            app:strokeWidth="2dp"
-            app:strokeColor="#CD7F32"
-            app:cardBackgroundColor="@color/trashgo_surface">
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:gravity="center"
-                android:padding="12dp">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textSize="22sp"
-                    android:text="🥉" />
-
-                <TextView
-                    android:id="@+id/podium_3rd_name"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="4dp"
-                    android:textSize="13sp"
-                    android:textStyle="bold"
-                    android:maxLines="1"
-                    android:ellipsize="end"
-                    tools:text="GreenSam" />
-
-                <TextView
-                    android:id="@+id/podium_3rd_points"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="2dp"
-                    android:textSize="12sp"
-                    android:textStyle="bold"
-                    android:textColor="@color/trashgo_primary"
-                    tools:text="950 pts" />
-
-            </LinearLayout>
-
-        </com.google.android.material.card.MaterialCardView>
-
-    </LinearLayout>
-
-    <View
-        style="@style/Widget.TrashGo.Divider"
-        android:layout_marginTop="20dp" />
-
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/leaderboard_list"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        android:clipToPadding="false"
-        android:paddingHorizontal="20dp"
-        android:paddingTop="12dp"
-        android:paddingBottom="16dp"
-        tools:itemCount="6"
-        tools:listitem="@layout/item_leaderboard" />
-
+        android:layout_marginTop="8dp"
+        android:gravity="center"
+        android:text="@string/leaderboard_placeholder" />
 </LinearLayout>
