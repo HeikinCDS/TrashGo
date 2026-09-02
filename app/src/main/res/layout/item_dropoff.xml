@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:gravity="center_vertical"
+    android:paddingHorizontal="24dp"
+    android:paddingVertical="14dp"
+    android:background="?attr/selectableItemBackground">
+
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/dropoff_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:maxLines="1"
+            android:ellipsize="end"
+            android:textSize="15sp"
+            android:textStyle="bold"
+            android:textColor="@color/trashgo_on_surface"
+            tools:text="Library Entrance Recycling Station" />
+
+        <TextView
+            android:id="@+id/dropoff_types"
+            style="@style/TextAppearance.TrashGo.Caption"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="2dp"
+            android:maxLines="1"
+            android:ellipsize="end"
+            tools:text="Plastic, Paper, Metal" />
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/dropoff_distance"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="12dp"
+        android:textSize="15sp"
+        android:textStyle="bold"
+        android:fontFeatureSettings="tnum"
+        android:textColor="@color/trashgo_primary"
+        tools:text="90 m" />
+
+</LinearLayout>

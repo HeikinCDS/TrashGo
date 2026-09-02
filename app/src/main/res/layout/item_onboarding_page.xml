@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    One onboarding page — RESTYLED. Layout and styling only.
+    IDs unchanged: onboarding_image, onboarding_title, onboarding_body.
+    OnboardingAdapter still calls setImageResource / setText on exactly these.
+
+    The illustration now sits inside a tinted circle. The source icons are flat
+    single-colour vectors; on bare white they float, and the circle gives them a
+    footprint without inventing new artwork.
+-->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:gravity="center"
+    android:paddingHorizontal="40dp"
+    android:background="@color/trashgo_surface">
+
+    <FrameLayout
+        android:layout_width="156dp"
+        android:layout_height="156dp"
+        android:background="@drawable/bg_avatar_circle">
+
+        <ImageView
+            android:id="@+id/onboarding_image"
+            android:layout_width="68dp"
+            android:layout_height="68dp"
+            android:layout_gravity="center"
+            android:contentDescription="@null"
+            app:tint="@color/trashgo_primary"
+            tools:src="@drawable/ic_map" />
+
+    </FrameLayout>
+
+    <TextView
+        android:id="@+id/onboarding_title"
+        style="@style/TextAppearance.TrashGo.Display"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="40dp"
+        android:gravity="center"
+        tools:text="Identify your waste" />
+
+    <TextView
+        android:id="@+id/onboarding_body"
+        style="@style/TextAppearance.TrashGo.Body"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="12dp"
+        android:gravity="center"
+        tools:text="Use your camera to scan an item and let TrashGo suggest its waste category." />
+
+</LinearLayout>

@@ -1,0 +1,174 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/trashgo_surface"
+    android:fillViewport="true">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:paddingHorizontal="24dp"
+        android:paddingTop="16dp"
+        android:paddingBottom="28dp">
+
+        <ImageView
+            android:id="@+id/result_close"
+            android:layout_width="44dp"
+            android:layout_height="44dp"
+            android:layout_gravity="end"
+            android:padding="10dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:clickable="true"
+            android:focusable="true"
+            android:src="@drawable/ic_close"
+            android:contentDescription="@string/close"
+            app:tint="@color/trashgo_on_surface_variant" />
+
+        <com.google.android.material.imageview.ShapeableImageView
+            android:id="@+id/result_photo"
+            android:layout_width="match_parent"
+            android:layout_height="190dp"
+            android:layout_marginTop="4dp"
+            android:scaleType="centerCrop"
+            android:contentDescription="@string/result_photo_desc"
+            app:shapeAppearanceOverlay="@style/ShapeAppearance.TrashGo.Photo"
+            tools:src="@drawable/ic_scan_waste" />
+
+        <TextView
+            style="@style/TextAppearance.TrashGo.Label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="22dp"
+            android:text="@string/result_identified" />
+
+        <TextView
+            android:id="@+id/result_category"
+            style="@style/TextAppearance.TrashGo.Display"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            tools:text="Plastic" />
+
+        <ProgressBar
+            android:id="@+id/result_confidence_bar"
+            style="?android:attr/progressBarStyleHorizontal"
+            android:layout_width="match_parent"
+            android:layout_height="6dp"
+            android:layout_marginTop="18dp"
+            android:max="100"
+            android:progressTint="@color/trashgo_primary"
+            android:progressBackgroundTint="@color/trashgo_divider"
+            tools:progress="92" />
+
+        <TextView
+            android:id="@+id/result_confidence"
+            style="@style/TextAppearance.TrashGo.Caption"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            tools:text="92% confident" />
+
+        <TextView
+            android:id="@+id/result_warning"
+            style="@style/TextAppearance.TrashGo.Caption"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:textColor="@color/trashgo_error"
+            android:visibility="gone"
+            android:text="@string/result_low_confidence"
+            tools:visibility="visible" />
+
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/result_points_card"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            app:cardCornerRadius="14dp"
+            app:cardElevation="0dp"
+            app:strokeWidth="1dp"
+            app:strokeColor="@color/trashgo_primary"
+            app:cardBackgroundColor="@color/trashgo_surface">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="16dp">
+
+                <TextView
+                    android:id="@+id/result_points_earned"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    android:textColor="@color/trashgo_primary"
+                    tools:text="+40 Points Awarded! 🎉" />
+
+                <TextView
+                    android:id="@+id/result_quest_notice"
+                    style="@style/TextAppearance.TrashGo.Caption"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="6dp"
+                    android:textColor="@color/trashgo_on_surface"
+                    android:visibility="gone"
+                    tools:visibility="visible"
+                    tools:text="🎯 Quest Completed! +100 bonus points added!" />
+
+            </LinearLayout>
+        </com.google.android.material.card.MaterialCardView>
+
+        <View
+            style="@style/Widget.TrashGo.Divider"
+            android:layout_marginTop="26dp" />
+
+        <TextView
+            style="@style/TextAppearance.TrashGo.Label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:text="@string/result_tip_label" />
+
+        <TextView
+            android:id="@+id/result_tip"
+            style="@style/TextAppearance.TrashGo.Body"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            tools:text="Rinse the bottle and remove the cap before dropping it off." />
+
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:minHeight="32dp" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/result_find"
+            style="@style/Widget.TrashGo.Button.Primary"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:text="@string/result_find"
+            app:icon="@drawable/ic_map"
+            app:iconGravity="textStart"
+            app:iconPadding="10dp"
+            app:iconSize="20dp"
+            app:iconTint="@color/trashgo_on_primary" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/result_again"
+            style="@style/Widget.TrashGo.Button.Text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:text="@string/result_again" />
+
+    </LinearLayout>
+
+</ScrollView>

@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/trashgo_camera_bg">
+
+    <androidx.camera.view.PreviewView
+        android:id="@+id/previewView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+    <!-- ===== Framing guide: four corners, centred ===== -->
+
+    <FrameLayout
+        android:layout_width="230dp"
+        android:layout_height="230dp"
+        android:layout_gravity="center"
+        android:layout_marginBottom="72dp">
+
+        <View
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_gravity="top|start"
+            android:background="@drawable/bg_scan_corner_tl" />
+
+        <View
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_gravity="top|end"
+            android:background="@drawable/bg_scan_corner_tr" />
+
+        <View
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_gravity="bottom|start"
+            android:background="@drawable/bg_scan_corner_bl" />
+
+        <View
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_gravity="bottom|end"
+            android:background="@drawable/bg_scan_corner_br" />
+
+    </FrameLayout>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal|bottom"
+        android:layout_marginBottom="140dp"
+        android:text="@string/scan_hint"
+        android:textColor="#D1FFFFFF"
+        android:textSize="14sp"
+        android:shadowColor="#66000000"
+        android:shadowRadius="6"
+        android:shadowDx="0"
+        android:shadowDy="1" />
+
+    <!-- ===== Close ===== -->
+
+    <ImageButton
+        android:id="@+id/btnClose"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_gravity="top|start"
+        android:layout_margin="18dp"
+        android:background="@drawable/bg_scan_close"
+        android:src="@drawable/ic_close"
+        android:scaleType="centerInside"
+        android:padding="11dp"
+        android:contentDescription="@string/close" />
+
+
+    <Button
+        android:id="@+id/captureButton"
+        android:layout_width="72dp"
+        android:layout_height="72dp"
+        android:layout_gravity="center_horizontal|bottom"
+        android:layout_marginBottom="44dp"
+        android:background="@drawable/bg_scan_shutter"
+        android:text="@null"
+        android:stateListAnimator="@null"
+        android:contentDescription="@string/scan_waste" />
+
+    <!-- ===== Loading overlay ===== -->
+
+    <FrameLayout
+        android:id="@+id/loadingOverlay"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/trashgo_scrim"
+        android:clickable="true"
+        android:focusable="true"
+        android:visibility="gone"
+        tools:visibility="visible">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:orientation="vertical"
+            android:gravity="center">
+
+            <ProgressBar
+                android:layout_width="34dp"
+                android:layout_height="34dp"
+                android:indeterminateTint="#FFFFFF" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="18dp"
+                android:text="@string/scan_analysing"
+                android:textColor="#FFFFFF"
+                android:textSize="15sp" />
+
+        </LinearLayout>
+
+    </FrameLayout>
+
+</FrameLayout>
