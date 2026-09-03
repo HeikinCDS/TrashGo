@@ -26,7 +26,6 @@ import com.pinduoduo.trashgo.ui.scan.ScanFragment;
 import com.pinduoduo.trashgo.util.LocationHelper;
 import com.pinduoduo.trashgo.util.Prefs;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class HomeFragment extends Fragment implements DropOffAdapter.OnPointClickListener {
@@ -69,32 +68,15 @@ public class HomeFragment extends Fragment implements DropOffAdapter.OnPointClic
         binding.homeNearestList.setLayoutManager(new LinearLayoutManager(requireContext()));
         binding.homeNearestList.setAdapter(adapter);
 
-        // Fetch Today's Quests & Objectives
+        // Fetch Today's Objective of the Day
         QuestRepository questRepository = new QuestRepository();
-        List<Quest> allQuests = questRepository.getTodayQuests(requireContext());
-
-        List<Quest> objectiveList = new ArrayList<>();
-        List<Quest> sideQuestsList = new ArrayList<>();
-
-        for (Quest q : allQuests) {
-            if (q.isObjectiveOfDay()) {
-                objectiveList.add(q);
-            } else {
-                sideQuestsList.add(q);
-            }
-        }
+        List<Quest> objectiveList = questRepository.getTodayQuests(requireContext());
 
         // Setup Objective of the Day Adapter
         QuestAdapter objectiveAdapter = new QuestAdapter();
         binding.homeObjectiveList.setLayoutManager(new LinearLayoutManager(requireContext()));
         binding.homeObjectiveList.setAdapter(objectiveAdapter);
         objectiveAdapter.submitList(objectiveList);
-
-        // Setup Side Quests Adapter
-        QuestAdapter sideQuestsAdapter = new QuestAdapter();
-        binding.homeSideQuestsList.setLayoutManager(new LinearLayoutManager(requireContext()));
-        binding.homeSideQuestsList.setAdapter(sideQuestsAdapter);
-        sideQuestsAdapter.submitList(sideQuestsList);
 
         loadUserStats();
 
@@ -201,7 +183,6 @@ public class HomeFragment extends Fragment implements DropOffAdapter.OnPointClic
         super.onDestroyView();
         binding.homeNearestList.setAdapter(null);
         binding.homeObjectiveList.setAdapter(null);
-        binding.homeSideQuestsList.setAdapter(null);
         binding = null;
         adapter = null;
     }

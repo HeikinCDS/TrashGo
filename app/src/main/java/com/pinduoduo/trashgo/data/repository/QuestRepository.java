@@ -43,9 +43,18 @@ public class QuestRepository {
         if (todayKey.equals(lastDate) && json != null && !json.trim().isEmpty()) {
             try {
                 Type type = new TypeToken<List<Quest>>() {}.getType();
-                List<Quest> quests = gson.fromJson(json, type);
-                if (quests != null && !quests.isEmpty()) {
-                    return quests;
+                List<Quest> cachedQuests = gson.fromJson(json, type);
+                if (cachedQuests != null && !cachedQuests.isEmpty()) {
+                    List<Quest> objectivesOnly = new ArrayList<>();
+                    for (Quest q : cachedQuests) {
+                        if (q.isObjectiveOfDay()) {
+                            objectivesOnly.add(q);
+                        }
+                    }
+                    if (!objectivesOnly.isEmpty()) {
+                        saveQuests(context, todayKey, objectivesOnly);
+                        return objectivesOnly;
+                    }
                 }
             } catch (Exception e) {
                 // Fallback to regenerate
@@ -77,18 +86,8 @@ public class QuestRepository {
                 new QuestOption("Collect and throw 4 Plastic items", WasteCategory.PLASTIC, 4, 100),
                 new QuestOption("Collect and throw 3 Glass bottles", WasteCategory.GLASS, 3, 100),
                 new QuestOption("Collect and throw 3 Metal cans", WasteCategory.METAL, 3, 100),
-                new QuestOption("Collect and throw 4 E-Waste items", WasteCategory.EWASTE, 4, 100)
-        };
-
-        // Pool for Side Quests (20 pts each)
-        QuestOption[] sideQuestPool = new QuestOption[]{
-                new QuestOption("Collect and throw 1 Organic waste", WasteCategory.ORGANIC, 1, 20),
-                new QuestOption("Collect and throw 1 Plastic item", WasteCategory.PLASTIC, 1, 20),
-                new QuestOption("Collect and throw 1 Paper item", WasteCategory.PAPER, 1, 20),
-                new QuestOption("Collect and throw 1 E-Waste item", WasteCategory.EWASTE, 1, 20),
-                new QuestOption("Collect and throw 1 Glass bottle", WasteCategory.GLASS, 1, 20),
-                new QuestOption("Collect and throw 1 Metal can", WasteCategory.METAL, 1, 20),
-                new QuestOption("Collect and throw 1 General waste item", WasteCategory.GENERAL, 1, 20)
+                new QuestOption("Collect and throw 4 E-Waste items", WasteCategory.EWASTE, 4, 100),
+                new QuestOption("Collect and throw 3 Organic waste items", WasteCategory.ORGANIC, 3, 100)
         };
 
         // Pick 1 Objective of the Day
@@ -104,27 +103,6 @@ public class QuestRepository {
                 false,
                 dateKey
         ));
-
-        // Pick 3 distinct Side Quests
-        List<Integer> usedIndices = new ArrayList<>();
-        while (quests.size() < 4) {
-            int idx = random.nextInt(sideQuestPool.length);
-            if (!usedIndices.contains(idx)) {
-                usedIndices.add(idx);
-                QuestOption opt = sideQuestPool[idx];
-                quests.add(new Quest(
-                        "side_" + quests.size() + "_" + dateKey,
-                        opt.title,
-                        opt.category,
-                        opt.targetAmount,
-                        0,
-                        opt.rewardPoints,
-                        false,
-                        false,
-                        dateKey
-                ));
-            }
-        }
 
         return quests;
     }
