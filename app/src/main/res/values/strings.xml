@@ -108,4 +108,5 @@
     <string name="next">Next</string>
     <string name="get_started">Get Started</string>
     <string name="app_slogan">Scan. Recycle. Earn Rewards.</string>
+    <string name="qr_simulation_hint">Align the station QR code inside the frame. Prototype: tap the button to simulate confirmation.</string>
 </resources>

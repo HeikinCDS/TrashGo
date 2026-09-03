@@ -50,7 +50,7 @@
             android:textSize="14sp"
             android:textColor="#CCFFFFFF"
             android:gravity="center"
-            tools:text="Point camera at disposal bin QR code to claim points" />
+            android:text="@string/qr_simulation_hint" />
 
     </LinearLayout>
 
@@ -62,7 +62,8 @@
         <View
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@drawable/bg_tile_rounded" />
+            android:background="@drawable/bg_qr_scan_frame"
+            android:importantForAccessibility="no" />
 
     </FrameLayout>
 
