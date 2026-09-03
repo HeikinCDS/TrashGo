@@ -17,6 +17,8 @@
     <string name="scan_card_title">Ready to recycle?</string>
     <string name="scan_card_body">Scan an item to identify its waste category.</string>
     <string name="scan_waste">Scan waste</string>
+    <string name="scan_hint">Center your waste item inside the frame</string>
+    <string name="scan_analysing">Analyzing waste category...</string>
     
     <string name="result_identified">IDENTIFIED AS</string>
     <string name="result_confidence">%1$d%% confidence</string>
@@ -27,6 +29,9 @@
     <string name="result_again">Scan Again</string>
     <string name="result_photo_desc">Scanned waste photo</string>
     <string name="result_unknown">Unknown Waste</string>
+
+    <string name="qr_simulation_hint">Point camera at disposal station QR code</string>
+    <string name="claim_done">Done</string>
 
     <string name="waste_plastic">Plastic Waste</string>
     <string name="waste_paper">Paper &amp; Cardboard</string>
@@ -94,6 +99,10 @@
     <string name="error_registration_failed">Unable to create the account.</string>
     <string name="error_profile_creation">Account created, but the profile could not be saved: %1$s</string>
     <string name="error_reset_failed">Unable to send the reset email.</string>
+    <string name="error_no_account">No account found with this email.</string>
+    <string name="error_invalid_credentials">Invalid email or password.</string>
+    <string name="error_too_many_attempts">Too many failed attempts. Please try again later.</string>
+    <string name="error_network">Network error. Please check your connection.</string>
 
     <string name="onboarding_welcome_title">Welcome to TrashGo</string>
     <string name="onboarding_welcome_body">Your AI-powered recycling companion on campus.</string>
@@ -108,5 +117,4 @@
     <string name="next">Next</string>
     <string name="get_started">Get Started</string>
     <string name="app_slogan">Scan. Recycle. Earn Rewards.</string>
-    <string name="qr_simulation_hint">Align the station QR code inside the frame. Prototype: tap the button to simulate confirmation.</string>
 </resources>
