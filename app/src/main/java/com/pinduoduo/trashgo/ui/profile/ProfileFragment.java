@@ -18,6 +18,7 @@ import com.pinduoduo.trashgo.R;
 import com.pinduoduo.trashgo.databinding.FragmentProfileBinding;
 import com.pinduoduo.trashgo.ui.auth.LoginActivity;
 import com.pinduoduo.trashgo.ui.settings.SettingsSheet;
+import com.pinduoduo.trashgo.ui.vouchers.VouchersSheet;
 
 public class ProfileFragment extends Fragment {
     private FragmentProfileBinding binding;
@@ -26,11 +27,16 @@ public class ProfileFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
-
         binding = FragmentProfileBinding.inflate(inflater, container, false);
         binding.signOutButton.setOnClickListener(view -> signOut());
-        binding.profileSettings.setOnClickListener(v ->
-                SettingsSheet.show(getParentFragmentManager()));
+        if (binding.profileSettings != null) {
+            binding.profileSettings.setOnClickListener(v ->
+                    SettingsSheet.show(getParentFragmentManager()));
+        }
+        if (binding.vouchersButton != null) {
+            binding.vouchersButton.setOnClickListener(v ->
+                    VouchersSheet.show(getParentFragmentManager()));
+        }
         loadProfile();
         return binding.getRoot();
     }

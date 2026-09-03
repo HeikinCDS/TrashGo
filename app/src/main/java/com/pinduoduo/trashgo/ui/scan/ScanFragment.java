@@ -30,8 +30,8 @@ import androidx.camera.lifecycle.ProcessCameraProvider;
 import androidx.fragment.app.Fragment;
 import androidx.core.content.ContextCompat;
 
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.common.util.concurrent.ListenableFuture;
-import com.pinduoduo.trashgo.R;
 import com.pinduoduo.trashgo.databinding.FragmentScanBinding;
 
 import java.util.concurrent.ExecutorService;
@@ -185,9 +185,19 @@ public class ScanFragment extends Fragment {
 
                         Uri imageUri = Uri.fromFile(photoFile);
 
-                        requireActivity().runOnUiThread(() ->
-                                processCapturedImage(imageUri));
+                        requireActivity().runOnUiThread(() -> {
+
+                            Toast.makeText(
+                                    requireContext(),
+                                    "Photo captured!",
+                                    Toast.LENGTH_SHORT
+                            ).show();
+
+                            processCapturedImage(imageUri);
+                        });
                     }
+
+
 
                     @Override
                     public void onError(
@@ -223,7 +233,13 @@ public class ScanFragment extends Fragment {
                 return;
             }
 
-            sendToAi(bitmap, imageUri.getPath());
+            Toast.makeText(
+                    requireContext(),
+                    "Image processed successfully!",
+                    Toast.LENGTH_SHORT
+            ).show();
+
+            sendToAi(bitmap);
 
         } catch (Exception e) {
 
@@ -237,7 +253,7 @@ public class ScanFragment extends Fragment {
         }
     }
 
-    private void sendToAi(Bitmap bitmap, String photoPath) {
+    private void sendToAi(Bitmap bitmap) {
         binding.loadingOverlay.setVisibility(View.VISIBLE);
 
         geminiRepository.classifyWaste(bitmap, new GeminiRepository.GeminiCallback() {
@@ -245,7 +261,7 @@ public class ScanFragment extends Fragment {
             public void onSuccess(GeminiResponse response) {
                 if (isAdded()) {
                     binding.loadingOverlay.setVisibility(View.GONE);
-                    showResult(response, photoPath);
+                    showResultDialog(response);
                 }
             }
 
@@ -259,16 +275,54 @@ public class ScanFragment extends Fragment {
         });
     }
 
-    private void showResult(GeminiResponse response, String photoPath) {
+    private void showResultDialog(GeminiResponse response) {
+        String categoryStr = response.getCategory() != null ? response.getCategory() : "GENERAL";
+        com.pinduoduo.trashgo.data.model.WasteCategory cat = parseCategory(categoryStr);
+        if (cat == null) cat = com.pinduoduo.trashgo.data.model.WasteCategory.GENERAL;
+        int pts = com.pinduoduo.trashgo.data.repository.PointsRepositoryImpl.getCategoryPoints(cat);
+
+        // Start pending disposal session
+        new com.pinduoduo.trashgo.data.repository.DisposalSessionManager(requireContext()).startPendingScan(cat, pts);
+
+        final com.pinduoduo.trashgo.data.model.WasteCategory selectedCategory = cat;
+
+        new MaterialAlertDialogBuilder(requireContext())
+                .setTitle("♻️ Waste Identified: " + categoryStr)
+                .setMessage("Confidence: " + Math.round(response.getConfidence() * 100) + "%\n" +
+                        "Points Value: +" + pts + " Points\n\n" +
+                        "Tip: " + response.getTip() + "\n\n" +
+                        "Next Step: Select a disposal station to scan its QR code & claim your points!")
+                .setPositiveButton("Select Disposal Station", (dialog, which) -> {
+                    navigateToDisposalSelection();
+                })
+                .setNegativeButton("Scan Again", null)
+                .show();
+    }
+
+    private void navigateToDisposalSelection() {
         getParentFragmentManager()
                 .beginTransaction()
-                .replace(R.id.fragment_container, ResultFragment.newInstance(
-                        response.getCategory(),
-                        response.getConfidence(),
-                        response.getTip(),
-                        photoPath))
+                .replace(com.pinduoduo.trashgo.R.id.fragment_container, new DisposalStationSelectionFragment())
                 .addToBackStack(null)
                 .commit();
+    }
+
+    @Nullable
+    private static com.pinduoduo.trashgo.data.model.WasteCategory parseCategory(@Nullable String raw) {
+        if (raw == null) return null;
+        String cleaned = raw.toUpperCase(java.util.Locale.US).replaceAll("[^A-Z]", "");
+        if (cleaned.isEmpty()) return null;
+        if (cleaned.equals("EWASTE") || cleaned.equals("ELECTRONIC") || cleaned.equals("ELECTRONICS")) {
+            return com.pinduoduo.trashgo.data.model.WasteCategory.EWASTE;
+        }
+        if (cleaned.equals("FOOD") || cleaned.equals("COMPOST")) {
+            return com.pinduoduo.trashgo.data.model.WasteCategory.ORGANIC;
+        }
+        try {
+            return com.pinduoduo.trashgo.data.model.WasteCategory.valueOf(cleaned);
+        } catch (IllegalArgumentException e) {
+            return null;
+        }
     }
 
     @Override

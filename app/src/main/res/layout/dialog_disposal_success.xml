@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:background="@drawable/bg_sheet_top"
+    android:paddingHorizontal="24dp"
+    android:paddingTop="16dp"
+    android:paddingBottom="28dp"
+    android:gravity="center_horizontal">
+
+    <View
+        android:layout_width="36dp"
+        android:layout_height="4dp"
+        android:layout_marginBottom="20dp"
+        android:background="@color/trashgo_divider_strong" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="48sp"
+        android:text="🎉" />
+
+    <TextView
+        style="@style/TextAppearance.TrashGo.Display"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:text="Disposal Confirmed!" />
+
+    <TextView
+        android:id="@+id/success_points_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="12dp"
+        android:textSize="26sp"
+        android:textStyle="bold"
+        android:textColor="@color/trashgo_primary"
+        tools:text="+40 Points Earned!" />
+
+    <TextView
+        android:id="@+id/success_station_text"
+        style="@style/TextAppearance.TrashGo.Body"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:gravity="center"
+        tools:text="Disposed at UTAR Eco Recycling Hub" />
+
+    <TextView
+        android:id="@+id/success_quest_notice"
+        style="@style/TextAppearance.TrashGo.Caption"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="12dp"
+        android:background="@color/trashgo_primary_container_soft"
+        android:padding="12dp"
+        android:gravity="center"
+        android:textColor="@color/trashgo_primary"
+        android:visibility="gone"
+        tools:visibility="visible"
+        tools:text="🎯 Quest Completed! +100 bonus points added!" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btn_done_disposal"
+        style="@style/Widget.TrashGo.Button.Primary"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        android:text="Back to Home" />
+
+</LinearLayout>

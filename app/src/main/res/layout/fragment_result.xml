@@ -83,6 +83,46 @@
             android:text="@string/result_low_confidence"
             tools:visibility="visible" />
 
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/result_points_card"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            app:cardCornerRadius="14dp"
+            app:cardElevation="0dp"
+            app:strokeWidth="1dp"
+            app:strokeColor="@color/trashgo_primary"
+            app:cardBackgroundColor="@color/trashgo_surface">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="16dp">
+
+                <TextView
+                    android:id="@+id/result_points_earned"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    android:textColor="@color/trashgo_primary"
+                    tools:text="+40 Points Awarded! 🎉" />
+
+                <TextView
+                    android:id="@+id/result_quest_notice"
+                    style="@style/TextAppearance.TrashGo.Caption"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="6dp"
+                    android:textColor="@color/trashgo_on_surface"
+                    android:visibility="gone"
+                    tools:visibility="visible"
+                    tools:text="🎯 Quest Completed! +100 bonus points added!" />
+
+            </LinearLayout>
+        </com.google.android.material.card.MaterialCardView>
+
         <View
             style="@style/Widget.TrashGo.Divider"
             android:layout_marginTop="26dp" />
