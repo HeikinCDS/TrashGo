@@ -32,7 +32,7 @@
                 android:background="@drawable/bg_tile_rounded"
                 android:paddingHorizontal="0dp"
                 android:paddingVertical="3dp"
-                android:textSize="20sp"
+                android:textSize="15sp"
                 android:textStyle="bold"
                 android:textColor="@color/trashgo_primary"
                 tools:text="Objective of the Day" />

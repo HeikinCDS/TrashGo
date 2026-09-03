@@ -9,6 +9,12 @@ public class GeminiResponse {
     public GeminiResponse() {
     }
 
+    public GeminiResponse(String category, double confidence, String tip) {
+        this.category = category;
+        this.confidence = confidence;
+        this.tip = tip;
+    }
+
     public String getCategory() {
         return category;
     }

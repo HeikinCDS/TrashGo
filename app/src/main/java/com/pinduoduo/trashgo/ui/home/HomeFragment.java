@@ -17,6 +17,7 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.pinduoduo.trashgo.R;
 import com.pinduoduo.trashgo.data.model.DropOffPoint;
+import com.pinduoduo.trashgo.data.model.Quest;
 import com.pinduoduo.trashgo.data.repository.DropOffRepository;
 import com.pinduoduo.trashgo.data.repository.QuestRepository;
 import com.pinduoduo.trashgo.databinding.FragmentHomeBinding;
@@ -25,6 +26,7 @@ import com.pinduoduo.trashgo.ui.scan.ScanFragment;
 import com.pinduoduo.trashgo.util.LocationHelper;
 import com.pinduoduo.trashgo.util.Prefs;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class HomeFragment extends Fragment implements DropOffAdapter.OnPointClickListener {
@@ -67,13 +69,32 @@ public class HomeFragment extends Fragment implements DropOffAdapter.OnPointClic
         binding.homeNearestList.setLayoutManager(new LinearLayoutManager(requireContext()));
         binding.homeNearestList.setAdapter(adapter);
 
-        // Setup Quest list adapter
-        QuestAdapter questAdapter = new QuestAdapter();
-        binding.homeQuestsList.setLayoutManager(new LinearLayoutManager(requireContext()));
-        binding.homeQuestsList.setAdapter(questAdapter);
-
+        // Fetch Today's Quests & Objectives
         QuestRepository questRepository = new QuestRepository();
-        questAdapter.submitList(questRepository.getTodayQuests(requireContext()));
+        List<Quest> allQuests = questRepository.getTodayQuests(requireContext());
+
+        List<Quest> objectiveList = new ArrayList<>();
+        List<Quest> sideQuestsList = new ArrayList<>();
+
+        for (Quest q : allQuests) {
+            if (q.isObjectiveOfDay()) {
+                objectiveList.add(q);
+            } else {
+                sideQuestsList.add(q);
+            }
+        }
+
+        // Setup Objective of the Day Adapter
+        QuestAdapter objectiveAdapter = new QuestAdapter();
+        binding.homeObjectiveList.setLayoutManager(new LinearLayoutManager(requireContext()));
+        binding.homeObjectiveList.setAdapter(objectiveAdapter);
+        objectiveAdapter.submitList(objectiveList);
+
+        // Setup Side Quests Adapter
+        QuestAdapter sideQuestsAdapter = new QuestAdapter();
+        binding.homeSideQuestsList.setLayoutManager(new LinearLayoutManager(requireContext()));
+        binding.homeSideQuestsList.setAdapter(sideQuestsAdapter);
+        sideQuestsAdapter.submitList(sideQuestsList);
 
         loadUserStats();
 
@@ -179,7 +200,8 @@ public class HomeFragment extends Fragment implements DropOffAdapter.OnPointClic
     public void onDestroyView() {
         super.onDestroyView();
         binding.homeNearestList.setAdapter(null);
-        binding.homeQuestsList.setAdapter(null);
+        binding.homeObjectiveList.setAdapter(null);
+        binding.homeSideQuestsList.setAdapter(null);
         binding = null;
         adapter = null;
     }
