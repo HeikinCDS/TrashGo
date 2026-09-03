@@ -1,22 +1,55 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:gravity="center"
     android:orientation="vertical"
-    android:padding="24dp">
+    android:background="@color/trashgo_surface"
+    android:paddingTop="28dp">
 
     <TextView
-        style="@style/TextAppearance.TrashGo.Headline"
-        android:layout_width="wrap_content"
+        style="@style/TextAppearance.TrashGo.Display"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:paddingHorizontal="24dp"
         android:text="@string/map_title" />
 
     <TextView
+        android:id="@+id/map_filter_notice"
         style="@style/TextAppearance.TrashGo.Body"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:gravity="center"
-        android:text="@string/map_placeholder" />
+        android:paddingHorizontal="24dp"
+        android:layout_marginTop="4dp"
+        android:textColor="@color/trashgo_primary"
+        android:textStyle="bold"
+        tools:text="Showing disposal stations for: PLASTIC" />
+
+    <View
+        style="@style/Widget.TrashGo.Divider"
+        android:layout_marginTop="16dp" />
+
+    <TextView
+        android:id="@+id/map_status"
+        style="@style/TextAppearance.TrashGo.Caption"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingHorizontal="24dp"
+        android:layout_marginTop="12dp"
+        android:visibility="gone"
+        tools:text="Loading stations..." />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/map_dropoff_list"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:clipToPadding="false"
+        android:paddingHorizontal="16dp"
+        android:paddingTop="8dp"
+        android:paddingBottom="16dp"
+        tools:itemCount="4"
+        tools:listitem="@layout/item_dropoff" />
+
 </LinearLayout>

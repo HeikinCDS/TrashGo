@@ -84,42 +84,20 @@ public class ResultFragment extends Fragment {
         binding.resultTip.setText(tip == null || tip.trim().isEmpty()
                 ? getString(R.string.result_no_tip) : tip);
 
+        binding.resultFind.setText("Choose Disposal Location");
         binding.resultFind.setOnClickListener(v -> openMapForCategory());
         binding.resultAgain.setOnClickListener(v -> getParentFragmentManager().popBackStack());
         binding.resultClose.setOnClickListener(v -> closeToHome());
 
-        awardPointsForScan(category != null ? category : WasteCategory.GENERAL);
+        displayPendingPointsInfo(category != null ? category : WasteCategory.GENERAL);
     }
 
-    private void awardPointsForScan(@NonNull WasteCategory cat) {
-        new com.pinduoduo.trashgo.data.repository.PointsRepositoryImpl().awardScanPoints(
-                requireContext(),
-                cat,
-                new com.pinduoduo.trashgo.data.repository.PointsRepositoryImpl.AwardScanCallback() {
-                    @Override
-                    public void onSuccess(int basePoints, int questBonusPoints, int totalEarnedPoints,
-                                          @NonNull java.util.List<com.pinduoduo.trashgo.data.model.Quest> completedQuests) {
-                        if (binding == null) return;
-                        binding.resultPointsEarned.setText("+" + totalEarnedPoints + " Points Earned! 🎉");
-                        if (!completedQuests.isEmpty()) {
-                            StringBuilder sb = new StringBuilder("🎯 Quest Completed! ");
-                            for (com.pinduoduo.trashgo.data.model.Quest q : completedQuests) {
-                                sb.append(q.getTitle()).append(" (+").append(q.getRewardPoints()).append(" pts) ");
-                            }
-                            binding.resultQuestNotice.setText(sb.toString().trim());
-                            binding.resultQuestNotice.setVisibility(View.VISIBLE);
-                        } else {
-                            binding.resultQuestNotice.setVisibility(View.GONE);
-                        }
-                    }
-
-                    @Override
-                    public void onError(@NonNull String error) {
-                        if (binding == null) return;
-                        binding.resultPointsEarned.setText("+" + com.pinduoduo.trashgo.data.repository.PointsRepositoryImpl.getCategoryPoints(cat) + " Points Earned!");
-                    }
-                }
-        );
+    private void displayPendingPointsInfo(@NonNull WasteCategory cat) {
+        int pts = com.pinduoduo.trashgo.data.repository.PointsRepositoryImpl.getCategoryPoints(cat);
+        if (binding == null) return;
+        binding.resultPointsEarned.setText("Step 1 Complete: +" + pts + " Points Pending! ⏳");
+        binding.resultQuestNotice.setText("📍 Choose a disposal location & scan station QR code to claim your points!");
+        binding.resultQuestNotice.setVisibility(View.VISIBLE);
     }
 
     private void showPhoto(@Nullable String path) {
