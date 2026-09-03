@@ -1,22 +1,39 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:gravity="center"
     android:orientation="vertical"
-    android:padding="24dp">
+    android:background="@color/trashgo_surface"
+    android:paddingTop="28dp">
 
     <TextView
-        style="@style/TextAppearance.TrashGo.Headline"
-        android:layout_width="wrap_content"
+        style="@style/TextAppearance.TrashGo.Display"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:paddingHorizontal="24dp"
         android:text="@string/leaderboard_title" />
 
     <TextView
         style="@style/TextAppearance.TrashGo.Body"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:paddingHorizontal="24dp"
         android:layout_marginTop="8dp"
-        android:gravity="center"
-        android:text="@string/leaderboard_placeholder" />
+        android:text="Compete with real TrashGo recyclers &amp; climb the rankings!" />
+
+    <View
+        style="@style/Widget.TrashGo.Divider"
+        android:layout_marginTop="20dp" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/leaderboard_list"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:clipToPadding="false"
+        android:paddingBottom="16dp"
+        tools:itemCount="6"
+        tools:listitem="@layout/item_leaderboard" />
+
 </LinearLayout>
