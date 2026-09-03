@@ -111,6 +111,9 @@ public class QrScanFragment extends Fragment {
                         if (binding == null) return;
                         binding.qrLoadingOverlay.setVisibility(View.GONE);
 
+                        // Clear pending disposal session
+                        new com.pinduoduo.trashgo.data.repository.DisposalSessionManager(requireContext()).clearPendingScan();
+
                         String questNotice = null;
                         if (!completedQuests.isEmpty()) {
                             StringBuilder sb = new StringBuilder("🎯 Quest Completed! ");

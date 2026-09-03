@@ -276,13 +276,53 @@ public class ScanFragment extends Fragment {
     }
 
     private void showResultDialog(GeminiResponse response) {
+        String categoryStr = response.getCategory() != null ? response.getCategory() : "GENERAL";
+        com.pinduoduo.trashgo.data.model.WasteCategory cat = parseCategory(categoryStr);
+        if (cat == null) cat = com.pinduoduo.trashgo.data.model.WasteCategory.GENERAL;
+        int pts = com.pinduoduo.trashgo.data.repository.PointsRepositoryImpl.getCategoryPoints(cat);
+
+        // Start pending disposal session
+        new com.pinduoduo.trashgo.data.repository.DisposalSessionManager(requireContext()).startPendingScan(cat, pts);
+
+        final com.pinduoduo.trashgo.data.model.WasteCategory selectedCategory = cat;
+
         new MaterialAlertDialogBuilder(requireContext())
-                .setTitle("AI Identification Result")
-                .setMessage("Category: " + response.getCategory() + "\n\n" +
-                        "Confidence: " + Math.round(response.getConfidence() * 100) + "%\n\n" +
-                        "Tip: " + response.getTip())
-                .setPositiveButton("OK", null)
+                .setTitle("♻️ Waste Identified: " + categoryStr)
+                .setMessage("Confidence: " + Math.round(response.getConfidence() * 100) + "%\n" +
+                        "Points Value: +" + pts + " Points\n\n" +
+                        "Tip: " + response.getTip() + "\n\n" +
+                        "Next Step: Select a disposal station to scan its QR code & claim your points!")
+                .setPositiveButton("Select Disposal Station", (dialog, which) -> {
+                    navigateToDisposalSelection();
+                })
+                .setNegativeButton("Scan Again", null)
                 .show();
+    }
+
+    private void navigateToDisposalSelection() {
+        getParentFragmentManager()
+                .beginTransaction()
+                .replace(com.pinduoduo.trashgo.R.id.fragment_container, new DisposalStationSelectionFragment())
+                .addToBackStack(null)
+                .commit();
+    }
+
+    @Nullable
+    private static com.pinduoduo.trashgo.data.model.WasteCategory parseCategory(@Nullable String raw) {
+        if (raw == null) return null;
+        String cleaned = raw.toUpperCase(java.util.Locale.US).replaceAll("[^A-Z]", "");
+        if (cleaned.isEmpty()) return null;
+        if (cleaned.equals("EWASTE") || cleaned.equals("ELECTRONIC") || cleaned.equals("ELECTRONICS")) {
+            return com.pinduoduo.trashgo.data.model.WasteCategory.EWASTE;
+        }
+        if (cleaned.equals("FOOD") || cleaned.equals("COMPOST")) {
+            return com.pinduoduo.trashgo.data.model.WasteCategory.ORGANIC;
+        }
+        try {
+            return com.pinduoduo.trashgo.data.model.WasteCategory.valueOf(cleaned);
+        } catch (IllegalArgumentException e) {
+            return null;
+        }
     }
 
     @Override

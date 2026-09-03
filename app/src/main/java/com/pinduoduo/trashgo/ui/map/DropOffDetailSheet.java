@@ -79,7 +79,22 @@ public class DropOffDetailSheet extends BottomSheetDialogFragment {
         binding.sheetAccepted.setText(categories != null && !categories.isEmpty() ? categories : "All Recyclables");
         binding.sheetDistance.setText("Nearby");
 
+        com.pinduoduo.trashgo.data.repository.DisposalSessionManager sessionManager =
+                new com.pinduoduo.trashgo.data.repository.DisposalSessionManager(requireContext());
+        boolean hasScan = sessionManager.hasActiveScan();
+
+        if (!hasScan) {
+            binding.sheetScanQr.setText("Scan Waste Item First to Claim Points");
+            binding.sheetScanQr.setAlpha(0.6f);
+        }
+
         binding.sheetScanQr.setOnClickListener(v -> {
+            if (!sessionManager.hasActiveScan()) {
+                android.widget.Toast.makeText(requireContext(),
+                        "Please scan a waste item first before claiming points at a station!",
+                        android.widget.Toast.LENGTH_LONG).show();
+                return;
+            }
             dismiss();
             if (getActivity() != null) {
                 getActivity().getSupportFragmentManager()
