@@ -48,6 +48,11 @@ public class QuestRepository {
                     List<Quest> objectivesOnly = new ArrayList<>();
                     for (Quest q : cachedQuests) {
                         if (q.isObjectiveOfDay()) {
+                            // Ensure required target amount is 1
+                            q.setTargetAmount(1);
+                            if (q.getCurrentAmount() >= 1) {
+                                q.setCompleted(true);
+                            }
                             objectivesOnly.add(q);
                         }
                     }
@@ -80,14 +85,14 @@ public class QuestRepository {
         List<Quest> quests = new ArrayList<>();
         Random random = new Random(dateKey.hashCode());
 
-        // Pool for Objective of the Day (100 pts)
+        // Pool for Objective of the Day (100 pts) - Target Amount = 1
         QuestOption[] objectivePool = new QuestOption[]{
-                new QuestOption("Collect and throw 5 Paper", WasteCategory.PAPER, 5, 100),
-                new QuestOption("Collect and throw 4 Plastic items", WasteCategory.PLASTIC, 4, 100),
-                new QuestOption("Collect and throw 3 Glass bottles", WasteCategory.GLASS, 3, 100),
-                new QuestOption("Collect and throw 3 Metal cans", WasteCategory.METAL, 3, 100),
-                new QuestOption("Collect and throw 4 E-Waste items", WasteCategory.EWASTE, 4, 100),
-                new QuestOption("Collect and throw 3 Organic waste items", WasteCategory.ORGANIC, 3, 100)
+                new QuestOption("Collect and throw 1 Paper item", WasteCategory.PAPER, 1, 100),
+                new QuestOption("Collect and throw 1 Plastic item", WasteCategory.PLASTIC, 1, 100),
+                new QuestOption("Collect and throw 1 Glass bottle", WasteCategory.GLASS, 1, 100),
+                new QuestOption("Collect and throw 1 Metal can", WasteCategory.METAL, 1, 100),
+                new QuestOption("Collect and throw 1 E-Waste item", WasteCategory.EWASTE, 1, 100),
+                new QuestOption("Collect and throw 1 Organic waste item", WasteCategory.ORGANIC, 1, 100)
         };
 
         // Pick 1 Objective of the Day
@@ -96,7 +101,7 @@ public class QuestRepository {
                 "obj_" + dateKey,
                 selectedObjective.title,
                 selectedObjective.category,
-                selectedObjective.targetAmount,
+                1,
                 0,
                 selectedObjective.rewardPoints,
                 true,

@@ -10,7 +10,7 @@
         <item name="colorSurface">@color/trashgo_surface</item>
         <item name="colorOnSurface">@color/trashgo_on_surface</item>
         <item name="colorOutline">@color/trashgo_outline</item>
-        <item name="android:fontFamily">sans</item>
+        <item name="android:fontFamily">sans-serif</item>
     </style>
 
     <style name="TextAppearance.TrashGo.Headline" parent="TextAppearance.Material3.HeadlineMedium">

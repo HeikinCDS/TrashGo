@@ -15,12 +15,16 @@ import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.pinduoduo.trashgo.R;
+import com.pinduoduo.trashgo.data.model.MyVoucher;
 import com.pinduoduo.trashgo.data.model.Voucher;
+import com.pinduoduo.trashgo.data.repository.MyVoucherManager;
 import com.pinduoduo.trashgo.data.repository.PointsRepositoryImpl;
 import com.pinduoduo.trashgo.databinding.SheetVouchersBinding;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 public class VouchersSheet extends BottomSheetDialogFragment {
 
@@ -28,7 +32,8 @@ public class VouchersSheet extends BottomSheetDialogFragment {
 
     private SheetVouchersBinding binding;
     private PointsRepositoryImpl pointsRepository;
-    private VoucherAdapter adapter;
+    private VoucherAdapter availableAdapter;
+    private MyVoucherAdapter myVoucherAdapter;
     private int currentPointsBalance = 0;
 
     public static void show(@NonNull FragmentManager fm) {
@@ -48,14 +53,46 @@ public class VouchersSheet extends BottomSheetDialogFragment {
         super.onViewCreated(view, savedInstanceState);
         pointsRepository = new PointsRepositoryImpl();
 
-        adapter = new VoucherAdapter(this::onRedeemVoucher);
+        // Available Rewards Adapter
+        availableAdapter = new VoucherAdapter(this::onRedeemVoucher);
         binding.vouchersRecyclerView.setLayoutManager(new LinearLayoutManager(requireContext()));
-        binding.vouchersRecyclerView.setAdapter(adapter);
+        binding.vouchersRecyclerView.setAdapter(availableAdapter);
+
+        // Your Vouchers Adapter
+        myVoucherAdapter = new MyVoucherAdapter();
+        binding.myVouchersRecyclerView.setLayoutManager(new LinearLayoutManager(requireContext()));
+        binding.myVouchersRecyclerView.setAdapter(myVoucherAdapter);
+
+        // Tab click listeners
+        binding.btnTabAvailable.setOnClickListener(v -> switchToTab(true));
+        binding.btnTabMyVouchers.setOnClickListener(v -> switchToTab(false));
 
         binding.btnClaimCode.setOnClickListener(v -> claimPromoCode());
 
         loadAvailableVouchers();
+        loadMyVouchers();
         loadUserBalance();
+
+        switchToTab(true);
+    }
+
+    private void switchToTab(boolean showAvailable) {
+        if (showAvailable) {
+            binding.layoutAvailableRewards.setVisibility(View.VISIBLE);
+            binding.layoutYourVouchers.setVisibility(View.GONE);
+            binding.btnTabAvailable.setBackgroundColor(requireContext().getColor(R.color.trashgo_primary));
+            binding.btnTabAvailable.setTextColor(requireContext().getColor(R.color.trashgo_on_primary));
+            binding.btnTabMyVouchers.setBackgroundColor(requireContext().getColor(R.color.trashgo_surface_sunken));
+            binding.btnTabMyVouchers.setTextColor(requireContext().getColor(R.color.trashgo_on_surface));
+        } else {
+            binding.layoutAvailableRewards.setVisibility(View.GONE);
+            binding.layoutYourVouchers.setVisibility(View.VISIBLE);
+            binding.btnTabMyVouchers.setBackgroundColor(requireContext().getColor(R.color.trashgo_primary));
+            binding.btnTabMyVouchers.setTextColor(requireContext().getColor(R.color.trashgo_on_primary));
+            binding.btnTabAvailable.setBackgroundColor(requireContext().getColor(R.color.trashgo_surface_sunken));
+            binding.btnTabAvailable.setTextColor(requireContext().getColor(R.color.trashgo_on_surface));
+            loadMyVouchers();
+        }
     }
 
     private void loadUserBalance() {
@@ -77,7 +114,24 @@ public class VouchersSheet extends BottomSheetDialogFragment {
         list.add(new Voucher("v2", "🛒 $10 Supermarket Coupon", "Valid for organic & recycled goods", 350, "GROCERY10"));
         list.add(new Voucher("v3", "🎒 Eco Canvas Tote Bag", "Claim at any TrashGo drop-off station", 500, "BAG500"));
         list.add(new Voucher("v4", "🎟️ $20 Green Merchant Pass", "Valid across green stores nation-wide", 750, "GREEN20"));
-        adapter.submitList(list);
+        availableAdapter.submitList(list);
+    }
+
+    private void loadMyVouchers() {
+        List<MyVoucher> claimedList = MyVoucherManager.getClaimedVouchers(requireContext());
+        if (binding == null) return;
+
+        int count = claimedList.size();
+        binding.btnTabMyVouchers.setText("Your Vouchers (" + count + ")");
+
+        if (claimedList.isEmpty()) {
+            binding.txtEmptyMyVouchers.setVisibility(View.VISIBLE);
+            binding.myVouchersRecyclerView.setVisibility(View.GONE);
+        } else {
+            binding.txtEmptyMyVouchers.setVisibility(View.GONE);
+            binding.myVouchersRecyclerView.setVisibility(View.VISIBLE);
+            myVoucherAdapter.submitList(claimedList);
+        }
     }
 
     private void onRedeemVoucher(@NonNull Voucher voucher) {
@@ -87,7 +141,12 @@ public class VouchersSheet extends BottomSheetDialogFragment {
                 if (binding == null) return;
                 currentPointsBalance = newBalance;
                 binding.voucherBalanceText.setText("⭐️ " + newBalance + " Pts");
-                Toast.makeText(requireContext(), message + "\nCode: " + voucher.getVoucherCode(), Toast.LENGTH_LONG).show();
+
+                String uniqueCode = voucher.getVoucherCode() + "-" + (1000 + new Random().nextInt(9000));
+                MyVoucherManager.addClaimedVoucher(requireContext(), voucher.getTitle(), uniqueCode, voucher.getPointsCost());
+                loadMyVouchers();
+
+                Toast.makeText(requireContext(), message + "\nCode: " + uniqueCode + " added to Your Vouchers! 🎟️", Toast.LENGTH_LONG).show();
             }
 
             @Override
@@ -105,14 +164,20 @@ public class VouchersSheet extends BottomSheetDialogFragment {
             return;
         }
 
-        pointsRepository.claimVoucherCode(code, new PointsRepositoryImpl.ActionCallback() {
+        final String cleanCode = code.trim().toUpperCase();
+
+        pointsRepository.claimVoucherCode(cleanCode, new PointsRepositoryImpl.ActionCallback() {
             @Override
             public void onSuccess(@NonNull String message, int newBalance) {
                 if (binding == null) return;
                 currentPointsBalance = newBalance;
                 binding.voucherBalanceText.setText("⭐️ " + newBalance + " Pts");
                 binding.editPromoCode.setText("");
-                Toast.makeText(requireContext(), message, Toast.LENGTH_LONG).show();
+
+                MyVoucherManager.addClaimedVoucher(requireContext(), "🎟️ Promo Bonus: " + cleanCode, cleanCode + "-BONUS", 0);
+                loadMyVouchers();
+
+                Toast.makeText(requireContext(), message + " Added to Your Vouchers! 🎟️", Toast.LENGTH_LONG).show();
             }
 
             @Override

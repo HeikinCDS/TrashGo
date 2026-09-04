@@ -28,7 +28,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="Vouchers &amp; Rewards 🎟️" />
+            android:text="Vouchers &amp; Rewards 🎟️ (Educational Purpose Only*)" />
 
         <TextView
             android:id="@+id/voucher_balance_text"
@@ -41,71 +41,136 @@
 
     </LinearLayout>
 
-    <View
-        style="@style/Widget.TrashGo.Divider"
-        android:layout_marginTop="16dp" />
-
-    <!-- Promo Code Section -->
-    <TextView
-        style="@style/TextAppearance.TrashGo.Label"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:text="Add / Redeem Voucher Code" />
-
+    <!-- ===== Tab Bar ===== -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:gravity="center_vertical"
-        android:layout_marginTop="8dp">
+        android:layout_marginTop="16dp"
+        android:background="@color/trashgo_surface_sunken"
+        android:padding="4dp">
 
-        <com.google.android.material.textfield.TextInputLayout
-            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btn_tab_available"
+            style="@style/Widget.TrashGo.Button.Primary"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:hint="Enter promo code (e.g. WELCOME100)">
-
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/edit_promo_code"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:inputType="textCapCharacters"
-                android:singleLine="true" />
-
-        </com.google.android.material.textfield.TextInputLayout>
+            android:text="Available Rewards"
+            android:textSize="13sp" />
 
         <com.google.android.material.button.MaterialButton
-            android:id="@+id/btn_claim_code"
-            style="@style/Widget.TrashGo.Button.Primary"
-            android:layout_width="wrap_content"
+            android:id="@+id/btn_tab_my_vouchers"
+            style="@style/Widget.TrashGo.Button.Tonal"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_gravity="center_vertical"
-            android:text="Claim" />
+            android:layout_weight="1"
+            android:layout_marginStart="4dp"
+            android:text="Your Vouchers"
+            android:textSize="13sp" />
 
     </LinearLayout>
 
-    <View
-        style="@style/Widget.TrashGo.Divider"
-        android:layout_marginTop="20dp" />
-
-    <!-- Redeem Vouchers Section -->
-    <TextView
-        style="@style/TextAppearance.TrashGo.Label"
+    <!-- ===== Container 1: Available Rewards ===== -->
+    <LinearLayout
+        android:id="@+id/layout_available_rewards"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:text="Exchange Points for Vouchers" />
+        android:orientation="vertical"
+        android:visibility="visible">
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/vouchers_recycler_view"
+        <!-- Promo Code Section -->
+        <TextView
+            style="@style/TextAppearance.TrashGo.Label"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="Add / Redeem Voucher Code" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:layout_marginTop="8dp">
+
+            <com.google.android.material.textfield.TextInputLayout
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:hint="Enter promo code (e.g. WELCOME100)">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/edit_promo_code"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="textCapCharacters"
+                    android:singleLine="true" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btn_claim_code"
+                style="@style/Widget.TrashGo.Button.Primary"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_gravity="center_vertical"
+                android:text="Claim" />
+
+        </LinearLayout>
+
+        <View
+            style="@style/Widget.TrashGo.Divider"
+            android:layout_marginTop="18dp" />
+
+        <!-- Redeem Vouchers Section -->
+        <TextView
+            style="@style/TextAppearance.TrashGo.Label"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="14dp"
+            android:text="Exchange Points for Vouchers" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/vouchers_recycler_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:nestedScrollingEnabled="false"
+            tools:itemCount="3"
+            tools:listitem="@layout/item_voucher" />
+
+    </LinearLayout>
+
+    <!-- ===== Container 2: Your Vouchers ===== -->
+    <LinearLayout
+        android:id="@+id/layout_your_vouchers"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="12dp"
-        android:nestedScrollingEnabled="false"
-        tools:itemCount="3"
-        tools:listitem="@layout/item_voucher" />
+        android:orientation="vertical"
+        android:visibility="gone">
+
+        <TextView
+            android:id="@+id/txt_empty_my_vouchers"
+            style="@style/TextAppearance.TrashGo.Caption"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:gravity="center"
+            android:text="You haven't claimed any vouchers yet.\nExchange points or enter promo codes to claim rewards!"
+            android:visibility="gone" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/my_vouchers_recycler_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:nestedScrollingEnabled="false"
+            tools:itemCount="2"
+            tools:listitem="@layout/item_my_voucher" />
+
+    </LinearLayout>
 
 </LinearLayout>
