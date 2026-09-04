@@ -19,7 +19,8 @@ public class DisposalSessionManager {
     private final SharedPreferences prefs;
 
     public DisposalSessionManager(@NonNull Context context) {
-        this.prefs = context.getApplicationContext().getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE);
+        this.prefs = context.getApplicationContext().getSharedPreferences(PREF_NAME + "_" +
+                com.google.firebase.auth.FirebaseAuth.getInstance().getUid(), Context.MODE_PRIVATE);
     }
 
     public static class PendingScan {

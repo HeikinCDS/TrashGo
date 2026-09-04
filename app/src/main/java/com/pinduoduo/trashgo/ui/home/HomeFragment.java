@@ -83,6 +83,18 @@ public class HomeFragment extends Fragment implements DropOffAdapter.OnPointClic
         binding.homeObjectiveList.setLayoutManager(new LinearLayoutManager(requireContext()));
         binding.homeObjectiveList.setAdapter(objectiveAdapter);
         objectiveAdapter.submitList(objectiveList);
+        final FragmentHomeBinding currentBinding = binding;
+        questRepository.refresh(requireContext(), new QuestRepository.Callback() {
+            @Override
+            public void onSuccess(Quest quest, int awarded) {
+                if (binding != currentBinding) return;
+                objectiveAdapter.submitList(java.util.Collections.singletonList(quest));
+            }
+            @Override
+            public void onError(String message) {
+                // Keep this user's local completion state when offline.
+            }
+        });
 
         loadUserStats();
 

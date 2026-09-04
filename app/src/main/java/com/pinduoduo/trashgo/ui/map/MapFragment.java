@@ -343,10 +343,14 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         if (!isAdded()) {
             return;
         }
+        final com.pinduoduo.trashgo.data.repository.ScanHistoryStore history =
+                new com.pinduoduo.trashgo.data.repository.ScanHistoryStore(requireContext());
+        final String historyId = history.pendingId(category.name());
         pointsRepository.claim(payload, point, category, location,
                 new PointsRepository.ClaimCallback() {
                     @Override
                     public void onAwarded(int pointsAwarded, long newTotal, int newStreak) {
+                        history.complete(historyId, point.getId(), point.getName());
                         if (!isAdded()) return;
                         showClaimResult(true,
                                 getString(R.string.claim_success_headline, pointsAwarded),

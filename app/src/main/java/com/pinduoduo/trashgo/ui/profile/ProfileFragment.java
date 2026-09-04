@@ -43,6 +43,41 @@ public class ProfileFragment extends Fragment {
     private static final int SAVED_PHOTO_SIZE = 512;
 
     private FragmentProfileBinding binding;
+    private int historyLimit = 10;
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        renderHistory();
+    }
+
+    private void renderHistory() {
+        if (binding == null) return;
+        java.util.List<com.pinduoduo.trashgo.data.model.ScanHistoryEntry> entries =
+                new com.pinduoduo.trashgo.data.repository.ScanHistoryStore(requireContext()).read();
+        binding.historyEntries.removeAllViews();
+        binding.historyStatus.setText(entries.isEmpty() ? R.string.history_empty : R.string.history_local);
+        java.text.DateFormat dateFormat = java.text.DateFormat.getDateTimeInstance(
+                java.text.DateFormat.MEDIUM, java.text.DateFormat.SHORT);
+        for (int i = 0; i < Math.min(historyLimit, entries.size()); i++) {
+            com.pinduoduo.trashgo.data.model.ScanHistoryEntry entry = entries.get(i);
+            com.pinduoduo.trashgo.databinding.ItemScanHistoryBinding row =
+                    com.pinduoduo.trashgo.databinding.ItemScanHistoryBinding.inflate(
+                            getLayoutInflater(), binding.historyEntries, false);
+            row.historyItem.setText(entry.itemName + " · " + entry.category);
+            row.historyScanTime.setText(getString(R.string.history_scanned,
+                    dateFormat.format(new java.util.Date(entry.scannedAt))));
+            row.historyLocation.setText(entry.droppedOffAt == 0 ? getString(R.string.history_pending)
+                    : getString(R.string.history_station, entry.dropOffName == null
+                            ? entry.dropOffId : entry.dropOffName));
+            row.historyDropTime.setVisibility(entry.droppedOffAt == 0 ? View.GONE : View.VISIBLE);
+            if (entry.droppedOffAt != 0) row.historyDropTime.setText(getString(R.string.history_dropped,
+                    dateFormat.format(new java.util.Date(entry.droppedOffAt))));
+            binding.historyEntries.addView(row.getRoot());
+        }
+        binding.historyMore.setVisibility(entries.size() > historyLimit ? View.VISIBLE : View.GONE);
+        binding.historyMore.setOnClickListener(v -> { historyLimit += 10; renderHistory(); });
+    }
     private final ExecutorService photoExecutor = Executors.newSingleThreadExecutor();
     private final ActivityResultLauncher<String> photoPickerLauncher =
             registerForActivityResult(new ActivityResultContracts.GetContent(), uri -> {

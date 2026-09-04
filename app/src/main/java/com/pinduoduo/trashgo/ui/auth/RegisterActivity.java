@@ -80,6 +80,7 @@ public class RegisterActivity extends AppCompatActivity {
                     userProfile.put("displayName", displayName);
                     userProfile.put("email", email);
                     userProfile.put("totalPoints", 0L);
+                    userProfile.put("lifetimePoints", 0L);
                     userProfile.put("itemsRecycled", 0L);
                     userProfile.put("currentStreak", 0L);
                     userProfile.put("lastScanDate", null);

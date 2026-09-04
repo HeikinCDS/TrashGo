@@ -41,7 +41,8 @@ public class GeminiRepository {
         
         String prompt = "Analyze this image and identify the waste item. " +
                 "Categorize it into one of these: PLASTIC, PAPER, GLASS, METAL, EWASTE, ORGANIC, GENERAL. " +
-                "Provide the result in JSON format: " +
+                "Also include an itemName field containing a short name for the visible object (for example aluminium can). " +
+                "Provide the result in JSON format, including itemName alongside these fields: " +
                 "{\"category\": \"CATEGORY_NAME\", \"confidence\": 0.95, \"tip\": \"A short recycling tip.\"} " +
                 "Return ONLY the JSON string.";
 

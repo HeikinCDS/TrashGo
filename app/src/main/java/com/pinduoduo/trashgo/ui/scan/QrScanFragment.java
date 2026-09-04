@@ -100,6 +100,9 @@ public class QrScanFragment extends Fragment {
     }
 
     private void processQrDisposalConfirmation() {
+        final com.pinduoduo.trashgo.data.repository.ScanHistoryStore history =
+                new com.pinduoduo.trashgo.data.repository.ScanHistoryStore(requireContext());
+        final String historyId = history.pendingId(category.name());
         binding.qrLoadingOverlay.setVisibility(View.VISIBLE);
 
         new PointsRepositoryImpl().awardScanPoints(
@@ -108,6 +111,7 @@ public class QrScanFragment extends Fragment {
                 new PointsRepositoryImpl.AwardScanCallback() {
                     @Override
                     public void onSuccess(int basePoints, int questBonusPoints, int totalEarnedPoints, @NonNull List<Quest> completedQuests) {
+                        history.complete(historyId, stationId, stationName);
                         if (binding == null) return;
                         binding.qrLoadingOverlay.setVisibility(View.GONE);
 

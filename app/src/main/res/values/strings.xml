@@ -126,4 +126,13 @@
     <string name="claim_too_far">You need to be at the drop-off point. Get within 100 m and try again.</string>
     <string name="claim_cooldown">You\'ve already claimed here recently. Try again in a little while.</string>
     <string name="qr_simulation_hint">Centre the station\'s QR code in the frame to confirm your drop-off.</string>
+    <string name="leaderboard_lifetime_description">Top 50 by lifetime points earned. Updates live while online. Spending points on vouchers does not reduce your score.</string>
+    <string name="scan_history_title">Scan history</string>
+    <string name="history_more">Show more scans</string>
+    <string name="history_empty">No scans yet. Scan an item to start your history.</string>
+    <string name="history_local">Saved on this phone for your account. Newest scans first.</string>
+    <string name="history_scanned">Scanned: %1$s</string>
+    <string name="history_dropped">Dropped off: %1$s</string>
+    <string name="history_pending">Not dropped off yet</string>
+    <string name="history_station">Drop-off: %1$s</string>
 </resources>

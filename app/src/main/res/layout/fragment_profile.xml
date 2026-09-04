@@ -232,6 +232,33 @@
             android:layout_marginTop="8dp"
             android:text="@string/badges_empty" />
 
+        <TextView
+            style="@style/TextAppearance.TrashGo.Label"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="28dp"
+            android:text="@string/scan_history_title" />
+
+        <TextView
+            android:id="@+id/history_status"
+            style="@style/TextAppearance.TrashGo.Caption"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp" />
+
+        <LinearLayout
+            android:id="@+id/history_entries"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/history_more"
+            style="@style/Widget.TrashGo.Button.Text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/history_more" />
+
         <Space
             android:layout_width="match_parent"
             android:layout_height="0dp"

@@ -260,6 +260,18 @@ public class ScanFragment extends Fragment {
     }
 
     private void showResult(GeminiResponse response, String photoPath) {
+        new com.pinduoduo.trashgo.data.repository.ScanHistoryStore(requireContext())
+                .record(response.getItemName(), response.getCategory());
+        try {
+            com.pinduoduo.trashgo.data.model.WasteCategory scannedCategory =
+                    com.pinduoduo.trashgo.data.model.WasteCategory.valueOf(
+                            response.getCategory().toUpperCase(java.util.Locale.US));
+            new com.pinduoduo.trashgo.data.repository.DisposalSessionManager(requireContext())
+                    .startPendingScan(scannedCategory,
+                            com.pinduoduo.trashgo.data.repository.PointsRepositoryImpl.getCategoryPoints(scannedCategory));
+        } catch (IllegalArgumentException | NullPointerException ignored) {
+            // Unknown classifications remain in history but cannot start a disposal session.
+        }
         getParentFragmentManager()
                 .beginTransaction()
                 .replace(R.id.fragment_container, ResultFragment.newInstance(

@@ -104,6 +104,8 @@ public class FirestorePointsRepository implements PointsRepository {
 
                 Map<String, Object> updates = new HashMap<>();
                 updates.put(FirestoreContract.Users.TOTAL_POINTS, newTotal);
+                updates.put("lifetimePoints", com.pinduoduo.trashgo.util.PointTotals.afterEarning(
+                        snapshot.getLong("lifetimePoints"), totalPoints, awarded));
                 updates.put(FirestoreContract.Users.ITEMS_RECYCLED, newItems);
                 updates.put(FirestoreContract.Users.CURRENT_STREAK, newStreak);
                 updates.put(FirestoreContract.Users.LAST_SCAN_DATE, today);

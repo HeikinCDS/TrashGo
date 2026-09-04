@@ -3,6 +3,9 @@ package com.pinduoduo.trashgo.data.remote;
 public class GeminiResponse {
 
     private String category;
+    private String itemName;
+
+    public String getItemName() { return itemName; }
     private double confidence;
     private String tip;
 

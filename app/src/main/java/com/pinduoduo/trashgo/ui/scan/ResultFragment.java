@@ -47,6 +47,8 @@ public class ResultFragment extends Fragment {
         args.putDouble(ARG_CONFIDENCE, confidence);
         args.putString(ARG_TIP, tip);
         args.putString(ARG_PHOTO, photoPath);
+        args.putString("objective_scan_date",
+                com.pinduoduo.trashgo.data.repository.QuestRepository.getTodayDateKey());
         fragment.setArguments(args);
         return fragment;
     }
@@ -87,6 +89,45 @@ public class ResultFragment extends Fragment {
         binding.resultFind.setOnClickListener(v -> openMapForCategory());
         binding.resultAgain.setOnClickListener(v -> getParentFragmentManager().popBackStack());
         binding.resultClose.setOnClickListener(v -> closeToHome());
+        checkDailyObjective();
+    }
+
+    private void checkDailyObjective() {
+        if (getArguments() == null || !com.pinduoduo.trashgo.data.repository.QuestRepository
+                .getTodayDateKey().equals(getArguments().getString("objective_scan_date"))) {
+            binding.resultObjectiveStatus.setVisibility(View.VISIBLE);
+            binding.resultObjectiveStatus.setText("Take a new scan for today's objective.");
+            return;
+        }
+        com.pinduoduo.trashgo.data.repository.QuestRepository repository =
+                new com.pinduoduo.trashgo.data.repository.QuestRepository();
+        com.pinduoduo.trashgo.data.model.Quest objective = repository.getTodayQuests(requireContext()).get(0);
+        binding.resultObjectiveStatus.setVisibility(View.VISIBLE);
+        if (!com.pinduoduo.trashgo.data.model.DailyObjective.matches(objective, category)) {
+            binding.resultObjectiveStatus.setText("Today's objective: " + objective.getTitle()
+                    + " (+" + objective.getRewardPoints() + " points). This scan does not match.");
+            return;
+        }
+        final FragmentResultBinding currentBinding = binding;
+        binding.resultObjectiveStatus.setText("Saving daily objective reward…");
+        binding.resultObjectiveStatus.setOnClickListener(null);
+        repository.completeScan(requireContext(), category,
+                new com.pinduoduo.trashgo.data.repository.QuestRepository.Callback() {
+                    @Override
+                    public void onSuccess(com.pinduoduo.trashgo.data.model.Quest quest, int awarded) {
+                        if (binding != currentBinding) return;
+                        binding.resultObjectiveStatus.setText(awarded > 0
+                                ? "Objective completed! +" + awarded + " points added."
+                                : "Objective completed! Today's " + quest.getRewardPoints()
+                                    + " points have already been awarded.");
+                    }
+                    @Override
+                    public void onError(String message) {
+                        if (binding != currentBinding) return;
+                        binding.resultObjectiveStatus.setText(message);
+                        binding.resultObjectiveStatus.setOnClickListener(v -> checkDailyObjective());
+                    }
+                });
     }
 
     private void showPhoto(@Nullable String path) {

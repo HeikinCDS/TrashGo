@@ -102,6 +102,17 @@
             android:layout_marginTop="8dp"
             tools:text="Rinse the bottle and remove the cap before dropping it off." />
 
+        <TextView
+            android:id="@+id/result_objective_status"
+            style="@style/TextAppearance.TrashGo.Body"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:padding="16dp"
+            android:background="@drawable/bg_tile_rounded"
+            android:accessibilityLiveRegion="polite"
+            android:visibility="gone" />
+
         <Space
             android:layout_width="match_parent"
             android:layout_height="0dp"

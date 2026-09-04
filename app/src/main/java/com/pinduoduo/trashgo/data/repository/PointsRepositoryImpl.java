@@ -8,7 +8,6 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.pinduoduo.trashgo.data.model.Quest;
 import com.pinduoduo.trashgo.data.model.WasteCategory;
@@ -24,12 +23,10 @@ public class PointsRepositoryImpl {
 
     private final FirebaseFirestore db;
     private final FirebaseAuth auth;
-    private final QuestRepository questRepository;
 
     public PointsRepositoryImpl() {
         this.db = FirebaseFirestore.getInstance();
         this.auth = FirebaseAuth.getInstance();
-        this.questRepository = new QuestRepository();
     }
 
     public static int getCategoryPoints(@NonNull WasteCategory category) {
@@ -60,61 +57,27 @@ public class PointsRepositoryImpl {
         }
 
         int basePoints = getCategoryPoints(category);
-        List<Quest> completedQuests = questRepository.onWasteScanned(context, category);
-
-        int questBonusPoints = 0;
-        for (Quest q : completedQuests) {
-            questBonusPoints += q.getRewardPoints();
-        }
-
-        int totalEarned = basePoints + questBonusPoints;
-        String uid = currentUser.getUid();
-        DocumentReference userRef = db.collection("users").document(uid);
-
-        String todayDate = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(new Date());
-
-        final int finalQuestBonus = questBonusPoints;
-        final int finalTotalEarned = totalEarned;
-
-        userRef.get().addOnCompleteListener(task -> {
-            if (!task.isSuccessful() || task.getResult() == null) {
-                // If user document creation fallback
-                Map<String, Object> newUserData = new HashMap<>();
-                newUserData.put("uid", uid);
-                newUserData.put("displayName", currentUser.getDisplayName() != null ? currentUser.getDisplayName() : "User");
-                newUserData.put("email", currentUser.getEmail());
-                newUserData.put("totalPoints", finalTotalEarned);
-                newUserData.put("itemsRecycled", 1);
-                newUserData.put("currentStreak", 1);
-                newUserData.put("lastScanDate", todayDate);
-
-                userRef.set(newUserData)
-                        .addOnSuccessListener(aVoid -> callback.onSuccess(basePoints, finalQuestBonus, finalTotalEarned, completedQuests))
-                        .addOnFailureListener(e -> callback.onError(e.getMessage() != null ? e.getMessage() : "Failed to update profile"));
-                return;
-            }
-
-            DocumentSnapshot snapshot = task.getResult();
-            long currentPoints = snapshot.contains("totalPoints") && snapshot.getLong("totalPoints") != null
-                    ? snapshot.getLong("totalPoints") : 0L;
-            long currentItems = snapshot.contains("itemsRecycled") && snapshot.getLong("itemsRecycled") != null
-                    ? snapshot.getLong("itemsRecycled") : 0L;
-            long streak = snapshot.contains("currentStreak") && snapshot.getLong("currentStreak") != null
-                    ? snapshot.getLong("currentStreak") : 0L;
-            String lastScanDate = snapshot.getString("lastScanDate");
-
-            long updatedStreak = calculateStreak(lastScanDate, todayDate, streak);
-
+        String todayDate = QuestRepository.getTodayDateKey();
+        DocumentReference userRef = db.collection("users").document(currentUser.getUid());
+        // Keep drop-off points separate, without overwriting concurrent objective rewards.
+        db.runTransaction(transaction -> {
+            DocumentSnapshot snapshot = transaction.get(userRef);
+            Long balance = snapshot.getLong("totalPoints");
+            Long items = snapshot.getLong("itemsRecycled");
+            Long streak = snapshot.getLong("currentStreak");
             Map<String, Object> updates = new HashMap<>();
-            updates.put("totalPoints", currentPoints + finalTotalEarned);
-            updates.put("itemsRecycled", currentItems + 1);
-            updates.put("currentStreak", updatedStreak);
+            updates.put("totalPoints", (balance == null ? 0L : balance) + basePoints);
+            updates.put("lifetimePoints", com.pinduoduo.trashgo.util.PointTotals.afterEarning(
+                    snapshot.getLong("lifetimePoints"), balance, basePoints));
+            updates.put("itemsRecycled", (items == null ? 0L : items) + 1);
+            updates.put("currentStreak", calculateStreak(snapshot.getString("lastScanDate"),
+                    todayDate, streak == null ? 0L : streak));
             updates.put("lastScanDate", todayDate);
-
-            userRef.update(updates)
-                    .addOnSuccessListener(aVoid -> callback.onSuccess(basePoints, finalQuestBonus, finalTotalEarned, completedQuests))
-                    .addOnFailureListener(e -> callback.onError(e.getMessage() != null ? e.getMessage() : "Failed to update points"));
-        });
+            transaction.set(userRef, updates, com.google.firebase.firestore.SetOptions.merge());
+            return basePoints;
+        }).addOnSuccessListener(points -> callback.onSuccess(points, 0, points,
+                java.util.Collections.emptyList()))
+          .addOnFailureListener(e -> callback.onError("Failed to save drop-off points. Please retry."));
     }
 
     private long calculateStreak(String lastScanDate, String todayDate, long currentStreak) {
@@ -152,25 +115,20 @@ public class PointsRepositoryImpl {
 
         DocumentReference userRef = db.collection("users").document(currentUser.getUid());
 
-        userRef.get().addOnCompleteListener(task -> {
-            if (!task.isSuccessful() || task.getResult() == null) {
-                callback.onError("Failed to fetch user points.");
-                return;
-            }
-            DocumentSnapshot doc = task.getResult();
-            long currentPoints = doc.contains("totalPoints") && doc.getLong("totalPoints") != null
-                    ? doc.getLong("totalPoints") : 0L;
-
-            if (currentPoints < pointsCost) {
-                callback.onError("Insufficient points balance! You need " + pointsCost + " points.");
-                return;
-            }
-
-            int newBalance = (int) (currentPoints - pointsCost);
-            userRef.update("totalPoints", newBalance)
-                    .addOnSuccessListener(aVoid -> callback.onSuccess("Successfully redeemed: " + voucherTitle, newBalance))
-                    .addOnFailureListener(e -> callback.onError("Failed to redeem voucher. Try again."));
-        });
+        db.runTransaction(transaction -> {
+            DocumentSnapshot doc = transaction.get(userRef);
+            Long balance = doc.getLong("totalPoints");
+            long newBalance = com.pinduoduo.trashgo.util.PointTotals.afterSpending(balance, pointsCost);
+            Map<String, Object> updates = new HashMap<>();
+            updates.put("totalPoints", newBalance);
+            // Initialise legacy accounts BEFORE deducting their first voucher purchase.
+            updates.put("lifetimePoints", com.pinduoduo.trashgo.util.PointTotals.lifetime(
+                    doc.getLong("lifetimePoints"), balance));
+            transaction.set(userRef, updates, com.google.firebase.firestore.SetOptions.merge());
+            return Math.toIntExact(newBalance);
+        }).addOnSuccessListener(balance -> callback.onSuccess("Successfully redeemed: " + voucherTitle, balance))
+          .addOnFailureListener(e -> callback.onError(e.getMessage() == null
+                  ? "Failed to redeem voucher. Try again." : e.getMessage()));
     }
 
     public void claimVoucherCode(@NonNull String code, @NonNull ActionCallback callback) {
@@ -198,19 +156,18 @@ public class PointsRepositoryImpl {
         final int pointsToAdd = bonusPoints;
         DocumentReference userRef = db.collection("users").document(currentUser.getUid());
 
-        userRef.get().addOnCompleteListener(task -> {
-            if (!task.isSuccessful() || task.getResult() == null) {
-                callback.onError("Failed to connect to account.");
-                return;
-            }
-            DocumentSnapshot doc = task.getResult();
-            long currentPoints = doc.contains("totalPoints") && doc.getLong("totalPoints") != null
-                    ? doc.getLong("totalPoints") : 0L;
-
-            int newBalance = (int) (currentPoints + pointsToAdd);
-            userRef.update("totalPoints", newBalance)
-                    .addOnSuccessListener(aVoid -> callback.onSuccess("Voucher code claimed! +" + pointsToAdd + " points added.", newBalance))
-                    .addOnFailureListener(e -> callback.onError("Failed to claim voucher code."));
-        });
+        db.runTransaction(transaction -> {
+            DocumentSnapshot doc = transaction.get(userRef);
+            Long balance = doc.getLong("totalPoints");
+            long newBalance = com.pinduoduo.trashgo.util.PointTotals.balance(balance) + pointsToAdd;
+            Map<String, Object> updates = new HashMap<>();
+            updates.put("totalPoints", newBalance);
+            updates.put("lifetimePoints", com.pinduoduo.trashgo.util.PointTotals.afterEarning(
+                    doc.getLong("lifetimePoints"), balance, pointsToAdd));
+            transaction.set(userRef, updates, com.google.firebase.firestore.SetOptions.merge());
+            return Math.toIntExact(newBalance);
+        }).addOnSuccessListener(balance -> callback.onSuccess(
+                "Voucher code claimed! +" + pointsToAdd + " points added.", balance))
+          .addOnFailureListener(e -> callback.onError("Failed to claim voucher code."));
     }
 }
