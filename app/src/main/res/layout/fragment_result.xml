@@ -28,15 +28,24 @@
             android:contentDescription="@string/close"
             app:tint="@color/trashgo_on_surface_variant" />
 
-        <com.google.android.material.imageview.ShapeableImageView
-            android:id="@+id/result_photo"
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/result_photo_card"
             android:layout_width="match_parent"
-            android:layout_height="190dp"
+            android:layout_height="220dp"
             android:layout_marginTop="4dp"
-            android:scaleType="centerCrop"
-            android:contentDescription="@string/result_photo_desc"
-            app:shapeAppearanceOverlay="@style/ShapeAppearance.TrashGo.Photo"
-            tools:src="@drawable/ic_scan_waste" />
+            app:cardCornerRadius="16dp"
+            app:cardElevation="0dp"
+            app:cardBackgroundColor="@color/trashgo_surface_sunken">
+
+            <ImageView
+                android:id="@+id/result_photo"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:scaleType="fitCenter"
+                android:contentDescription="@string/result_photo_desc"
+                tools:src="@drawable/ic_scan_waste" />
+
+        </com.google.android.material.card.MaterialCardView>
 
         <TextView
             style="@style/TextAppearance.TrashGo.Label"

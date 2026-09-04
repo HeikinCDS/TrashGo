@@ -92,10 +92,10 @@ public class ResultFragment extends Fragment {
     private void showPhoto(@Nullable String path) {
         Bitmap photo = loadPhoto(path);
         if (photo == null) {
-            binding.resultPhoto.setVisibility(View.GONE);
+            binding.resultPhotoCard.setVisibility(View.GONE);
             return;
         }
-        binding.resultPhoto.setVisibility(View.VISIBLE);
+        binding.resultPhotoCard.setVisibility(View.VISIBLE);
         binding.resultPhoto.setImageBitmap(photo);
     }
 
