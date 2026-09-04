@@ -10,7 +10,6 @@ import com.pinduoduo.trashgo.data.model.WasteCategory;
 import com.pinduoduo.trashgo.data.verify.VerificationResult;
 
 public interface PointsRepository {
-
     void claim(@Nullable String qrPayload,
                @NonNull DropOffPoint point,
                @NonNull WasteCategory category,
@@ -18,7 +17,6 @@ public interface PointsRepository {
                @NonNull ClaimCallback callback);
 
     interface ClaimCallback {
-
         void onAwarded(int pointsAwarded, long newTotal, int newStreak);
 
         void onRejected(@NonNull VerificationResult reason);

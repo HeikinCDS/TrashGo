@@ -41,7 +41,6 @@
 
     </LinearLayout>
 
-    <!-- ===== Tab Bar ===== -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -71,7 +70,6 @@
 
     </LinearLayout>
 
-    <!-- ===== Container 1: Available Rewards ===== -->
     <LinearLayout
         android:id="@+id/layout_available_rewards"
         android:layout_width="match_parent"
@@ -79,7 +77,6 @@
         android:orientation="vertical"
         android:visibility="visible">
 
-        <!-- Promo Code Section -->
         <TextView
             style="@style/TextAppearance.TrashGo.Label"
             android:layout_width="match_parent"
@@ -125,7 +122,6 @@
             style="@style/Widget.TrashGo.Divider"
             android:layout_marginTop="18dp" />
 
-        <!-- Redeem Vouchers Section -->
         <TextView
             style="@style/TextAppearance.TrashGo.Label"
             android:layout_width="match_parent"
@@ -144,7 +140,6 @@
 
     </LinearLayout>
 
-    <!-- ===== Container 2: Your Vouchers ===== -->
     <LinearLayout
         android:id="@+id/layout_your_vouchers"
         android:layout_width="match_parent"

@@ -28,7 +28,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class FirestorePointsRepository implements PointsRepository {
-
     private final FirebaseFirestore db;
     private final FirebaseAuth auth;
 
@@ -47,7 +46,6 @@ public class FirestorePointsRepository implements PointsRepository {
                       @NonNull final WasteCategory category,
                       @Nullable final Location location,
                       @NonNull final ClaimCallback callback) {
-
         FirebaseUser user = auth.getCurrentUser();
         if (user == null) {
             callback.onError("You are signed out. Sign in and try again.");
@@ -76,7 +74,6 @@ public class FirestorePointsRepository implements PointsRepository {
             @Override
             public Outcome apply(@NonNull Transaction transaction)
                     throws FirebaseFirestoreException {
-
                 DocumentSnapshot snapshot = transaction.get(userRef);
 
                 long lastClaim = readLastClaim(snapshot, pointId);
@@ -154,7 +151,6 @@ public class FirestorePointsRepository implements PointsRepository {
     }
 
     private static final class Outcome {
-
         final VerificationResult result;
         final int pointsAwarded;
         final long newTotal;

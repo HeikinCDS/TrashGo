@@ -42,8 +42,6 @@
                 android:textColor="@color/trashgo_on_surface_variant"
                 tools:text="Get $5 off your next Zus Coffee order." />
 
-
-
         </LinearLayout>
 
         <com.google.android.material.button.MaterialButton

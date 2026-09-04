@@ -28,7 +28,6 @@
             android:layout_marginTop="4dp"
             android:text="@string/home_title" />
 
-        <!-- ===== Stat row ===== -->
         <View
             style="@style/Widget.TrashGo.Divider"
             android:layout_marginTop="26dp" />
@@ -130,7 +129,6 @@
 
         <View style="@style/Widget.TrashGo.Divider" />
 
-        <!-- Vouchers Button on Home Screen -->
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btn_open_vouchers"
             style="@style/Widget.TrashGo.Button.Tonal"
@@ -143,7 +141,6 @@
             app:iconPadding="8dp"
             app:iconSize="20dp" />
 
-        <!-- Scan Card Section -->
         <TextView
             style="@style/TextAppearance.TrashGo.Title"
             android:layout_width="match_parent"
@@ -171,7 +168,6 @@
             app:iconSize="20dp"
             app:iconTint="@color/trashgo_on_primary" />
 
-        <!-- ===== Objective of the Day ===== -->
         <TextView
             style="@style/TextAppearance.TrashGo.Title"
             android:layout_width="match_parent"
@@ -196,7 +192,6 @@
             tools:itemCount="1"
             tools:listitem="@layout/item_quest" />
 
-        <!-- ===== Nearest Drop-off Points ===== -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

@@ -16,7 +16,6 @@ import com.google.android.gms.location.Priority;
 import com.google.android.gms.tasks.CancellationTokenSource;
 
 public class LocationHelper {
-
     public static final String[] PERMISSIONS = {
             Manifest.permission.ACCESS_FINE_LOCATION,
             Manifest.permission.ACCESS_COARSE_LOCATION
@@ -56,7 +55,6 @@ public class LocationHelper {
         }
     }
 
-    /** True if the fix came from a mock provider. Package D needs this. */
     public static boolean isMocked(@Nullable Location location) {
         if (location == null) return false;
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {

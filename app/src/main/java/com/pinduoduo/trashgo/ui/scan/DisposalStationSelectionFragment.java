@@ -24,7 +24,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class DisposalStationSelectionFragment extends Fragment implements DropOffAdapter.OnPointClickListener {
-
     private FragmentDisposalStationSelectionBinding binding;
     private DisposalSessionManager sessionManager;
     private DropOffAdapter adapter;

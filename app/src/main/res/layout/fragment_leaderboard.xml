@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -20,20 +20,360 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:paddingHorizontal="24dp"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="6dp"
         android:text="@string/leaderboard_lifetime_description" />
 
-    <View
-        style="@style/Widget.TrashGo.Divider"
-        android:layout_marginTop="24dp" />
-
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/leaderboard_list"
+    <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
         android:clipToPadding="false"
-        android:paddingBottom="16dp"
-        tools:itemCount="6" />
+        android:paddingBottom="24dp"
+        android:fillViewport="false">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/leaderboard_empty"
+                style="@style/TextAppearance.TrashGo.Body"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="40dp"
+                android:paddingHorizontal="24dp"
+                android:gravity="center"
+                android:visibility="gone"
+                android:text="@string/leaderboard_empty"
+                tools:visibility="gone" />
+
+            <LinearLayout
+                android:id="@+id/leaderboard_podium"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="bottom"
+                android:baselineAligned="false"
+                android:layout_marginTop="24dp"
+                android:paddingHorizontal="18dp">
+
+                <LinearLayout
+                    android:id="@+id/podium_two"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical"
+                    android:gravity="center_horizontal">
+
+                    <FrameLayout
+                        android:layout_width="52dp"
+                        android:layout_height="52dp"
+                        android:background="@drawable/bg_avatar_circle">
+
+                        <TextView
+                            android:id="@+id/podium_two_initial"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:textSize="20sp"
+                            android:textStyle="bold"
+                            android:textColor="@color/trashgo_primary"
+                            tools:text="A" />
+
+                    </FrameLayout>
+
+                    <TextView
+                        android:id="@+id/podium_two_name"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:paddingHorizontal="2dp"
+                        android:gravity="center"
+                        android:maxLines="1"
+                        android:ellipsize="end"
+                        android:textSize="13sp"
+                        android:textStyle="bold"
+                        android:textColor="@color/trashgo_on_surface"
+                        tools:text="Aina" />
+
+                    <TextView
+                        android:id="@+id/podium_two_points"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="1dp"
+                        android:gravity="center"
+                        android:textSize="13sp"
+                        android:textStyle="bold"
+                        android:fontFeatureSettings="tnum"
+                        android:textColor="@color/trashgo_primary"
+                        tools:text="980" />
+
+                    <TextView
+                        android:id="@+id/podium_two_place"
+                        android:layout_width="match_parent"
+                        android:layout_height="50dp"
+                        android:layout_marginTop="12dp"
+                        android:layout_marginHorizontal="6dp"
+                        android:gravity="center_horizontal|top"
+                        android:paddingTop="10dp"
+                        android:background="@drawable/bg_podium_second"
+                        android:textSize="18sp"
+                        android:textStyle="bold"
+                        android:fontFeatureSettings="tnum"
+                        android:textColor="@color/trashgo_on_primary_container"
+                        android:text="@string/leaderboard_place_two" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/podium_one"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical"
+                    android:gravity="center_horizontal">
+
+                    <FrameLayout
+                        android:layout_width="66dp"
+                        android:layout_height="66dp"
+                        android:background="@drawable/bg_avatar_circle_filled">
+
+                        <TextView
+                            android:id="@+id/podium_one_initial"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:textSize="26sp"
+                            android:textStyle="bold"
+                            android:textColor="@color/trashgo_on_primary"
+                            tools:text="E" />
+
+                    </FrameLayout>
+
+                    <TextView
+                        android:id="@+id/podium_one_name"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:paddingHorizontal="2dp"
+                        android:gravity="center"
+                        android:maxLines="1"
+                        android:ellipsize="end"
+                        android:textSize="14sp"
+                        android:textStyle="bold"
+                        android:textColor="@color/trashgo_on_surface"
+                        tools:text="EcoMaster" />
+
+                    <TextView
+                        android:id="@+id/podium_one_points"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="1dp"
+                        android:gravity="center"
+                        android:textSize="14sp"
+                        android:textStyle="bold"
+                        android:fontFeatureSettings="tnum"
+                        android:textColor="@color/trashgo_primary"
+                        tools:text="1,450" />
+
+                    <TextView
+                        android:id="@+id/podium_one_place"
+                        android:layout_width="match_parent"
+                        android:layout_height="68dp"
+                        android:layout_marginTop="12dp"
+                        android:layout_marginHorizontal="6dp"
+                        android:gravity="center_horizontal|top"
+                        android:paddingTop="12dp"
+                        android:background="@drawable/bg_podium_first"
+                        android:textSize="22sp"
+                        android:textStyle="bold"
+                        android:fontFeatureSettings="tnum"
+                        android:textColor="@color/trashgo_on_primary"
+                        android:text="@string/leaderboard_place_one" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/podium_three"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical"
+                    android:gravity="center_horizontal">
+
+                    <FrameLayout
+                        android:layout_width="52dp"
+                        android:layout_height="52dp"
+                        android:background="@drawable/bg_avatar_circle">
+
+                        <TextView
+                            android:id="@+id/podium_three_initial"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:textSize="20sp"
+                            android:textStyle="bold"
+                            android:textColor="@color/trashgo_primary"
+                            tools:text="J" />
+
+                    </FrameLayout>
+
+                    <TextView
+                        android:id="@+id/podium_three_name"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:paddingHorizontal="2dp"
+                        android:gravity="center"
+                        android:maxLines="1"
+                        android:ellipsize="end"
+                        android:textSize="13sp"
+                        android:textStyle="bold"
+                        android:textColor="@color/trashgo_on_surface"
+                        tools:text="Jason" />
+
+                    <TextView
+                        android:id="@+id/podium_three_points"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="1dp"
+                        android:gravity="center"
+                        android:textSize="13sp"
+                        android:textStyle="bold"
+                        android:fontFeatureSettings="tnum"
+                        android:textColor="@color/trashgo_primary"
+                        tools:text="820" />
+
+                    <TextView
+                        android:id="@+id/podium_three_place"
+                        android:layout_width="match_parent"
+                        android:layout_height="38dp"
+                        android:layout_marginTop="12dp"
+                        android:layout_marginHorizontal="6dp"
+                        android:gravity="center_horizontal|top"
+                        android:paddingTop="7dp"
+                        android:background="@drawable/bg_podium_third"
+                        android:textSize="17sp"
+                        android:textStyle="bold"
+                        android:fontFeatureSettings="tnum"
+                        android:textColor="@color/trashgo_on_surface_variant"
+                        android:text="@string/leaderboard_place_three" />
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/leaderboard_you_card"
+                style="@style/Widget.TrashGo.Card"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="24dp"
+                android:layout_marginHorizontal="24dp"
+                android:visibility="gone"
+                app:cardCornerRadius="14dp"
+                app:cardBackgroundColor="@color/trashgo_primary_container_soft"
+                tools:visibility="visible">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical"
+                    android:baselineAligned="false"
+                    android:paddingHorizontal="18dp"
+                    android:paddingVertical="16dp">
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
+
+                        <TextView
+                            style="@style/TextAppearance.TrashGo.Label"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:textColor="@color/trashgo_primary"
+                            android:text="@string/leaderboard_your_position" />
+
+                        <TextView
+                            android:id="@+id/leaderboard_you_rank"
+                            style="@style/TextAppearance.TrashGo.Stat"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="4dp"
+                            android:textStyle="bold"
+                            tools:text="#7" />
+
+                        <TextView
+                            android:id="@+id/leaderboard_you_gap"
+                            style="@style/TextAppearance.TrashGo.Caption"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="2dp"
+                            android:fontFeatureSettings="tnum"
+                            tools:text="120 points behind #6" />
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:gravity="end"
+                        android:layout_marginStart="16dp">
+
+                        <TextView
+                            android:id="@+id/leaderboard_you_points"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="end"
+                            android:textSize="20sp"
+                            android:textStyle="bold"
+                            android:fontFeatureSettings="tnum"
+                            android:textColor="@color/trashgo_primary"
+                            tools:text="1,450" />
+
+                        <TextView
+                            style="@style/TextAppearance.TrashGo.Caption"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="end"
+                            android:text="@string/leaderboard_points_label" />
+
+                    </LinearLayout>
+
+                </LinearLayout>
+
+            </com.google.android.material.card.MaterialCardView>
+
+            <TextView
+                android:id="@+id/leaderboard_ranking_label"
+                style="@style/TextAppearance.TrashGo.Label"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingHorizontal="24dp"
+                android:layout_marginTop="26dp"
+                android:layout_marginBottom="10dp"
+                android:text="@string/leaderboard_ranking" />
+
+            <View
+                android:id="@+id/leaderboard_ranking_divider"
+                style="@style/Widget.TrashGo.Divider" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/leaderboard_list"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:nestedScrollingEnabled="false"
+                android:overScrollMode="never"
+                tools:itemCount="4"
+                tools:listitem="@layout/item_leaderboard" />
+
+        </LinearLayout>
+
+    </androidx.core.widget.NestedScrollView>
 
 </LinearLayout>

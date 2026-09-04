@@ -2,7 +2,6 @@ package com.pinduoduo.trashgo.data.model;
 
 import java.util.Random;
 
-/** One stable category for each calendar day, not a specific object name. */
 public final class DailyObjective {
     private DailyObjective() {}
     public static Quest forDate(String date) {

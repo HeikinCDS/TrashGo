@@ -20,7 +20,6 @@ import java.util.Locale;
 import java.util.Map;
 
 public class PointsRepositoryImpl {
-
     private final FirebaseFirestore db;
     private final FirebaseAuth auth;
 
@@ -59,7 +58,7 @@ public class PointsRepositoryImpl {
         int basePoints = getCategoryPoints(category);
         String todayDate = QuestRepository.getTodayDateKey();
         DocumentReference userRef = db.collection("users").document(currentUser.getUid());
-        // Keep drop-off points separate, without overwriting concurrent objective rewards.
+
         db.runTransaction(transaction -> {
             DocumentSnapshot snapshot = transaction.get(userRef);
             Long balance = snapshot.getLong("totalPoints");
@@ -121,7 +120,7 @@ public class PointsRepositoryImpl {
             long newBalance = com.pinduoduo.trashgo.util.PointTotals.afterSpending(balance, pointsCost);
             Map<String, Object> updates = new HashMap<>();
             updates.put("totalPoints", newBalance);
-            // Initialise legacy accounts BEFORE deducting their first voucher purchase.
+
             updates.put("lifetimePoints", com.pinduoduo.trashgo.util.PointTotals.lifetime(
                     doc.getLong("lifetimePoints"), balance));
             transaction.set(userRef, updates, com.google.firebase.firestore.SetOptions.merge());

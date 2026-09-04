@@ -1,13 +1,15 @@
 package com.pinduoduo.trashgo.ui.scan;
 
-
 import com.pinduoduo.trashgo.data.remote.GeminiResponse;
 import com.pinduoduo.trashgo.data.repository.GeminiRepository;
 import com.pinduoduo.trashgo.util.ImageUtils;
 
 import android.Manifest;
+import android.content.Context;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,12 +24,13 @@ import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AlertDialog;
 import androidx.camera.core.CameraSelector;
 import androidx.camera.core.ImageCapture;
 import androidx.camera.core.Preview;
 import androidx.camera.lifecycle.ProcessCameraProvider;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.core.content.ContextCompat;
 
 import com.google.common.util.concurrent.ListenableFuture;
@@ -38,12 +41,15 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 public class ScanFragment extends Fragment {
+    private static final int MAX_SCAN_PX = 1600;
 
     private FragmentScanBinding binding;
 
     private ImageCapture imageCapture;
     private ExecutorService cameraExecutor;
     private GeminiRepository geminiRepository;
+
+    private final Handler mainHandler = new Handler(Looper.getMainLooper());
 
     private final ActivityResultLauncher<String> cameraPermissionLauncher =
             registerForActivityResult(
@@ -52,11 +58,7 @@ public class ScanFragment extends Fragment {
                         if (isGranted) {
                             startCamera();
                         } else {
-                            Toast.makeText(
-                                    requireContext(),
-                                    "Camera permission is required to scan waste.",
-                                    Toast.LENGTH_LONG
-                            ).show();
+                            toast("Camera permission is required to scan waste.");
                         }
                     }
             );
@@ -66,13 +68,7 @@ public class ScanFragment extends Fragment {
             @NonNull LayoutInflater inflater,
             ViewGroup container,
             Bundle savedInstanceState) {
-
-        binding = FragmentScanBinding.inflate(
-                inflater,
-                container,
-                false
-        );
-
+        binding = FragmentScanBinding.inflate(inflater, container, false);
         return binding.getRoot();
     }
 
@@ -88,205 +84,196 @@ public class ScanFragment extends Fragment {
         checkCameraPermission();
     }
 
-    private void checkCameraPermission() {
+    private void toast(@NonNull String message) {
+        Context context = getContext();
+        if (context != null) {
+            Toast.makeText(context, message, Toast.LENGTH_LONG).show();
+        }
+    }
 
+    private void checkCameraPermission() {
         if (ContextCompat.checkSelfPermission(
                 requireContext(),
                 Manifest.permission.CAMERA
         ) == PackageManager.PERMISSION_GRANTED) {
-
             startCamera();
-
         } else {
-
-            cameraPermissionLauncher.launch(
-                    Manifest.permission.CAMERA
-            );
+            cameraPermissionLauncher.launch(Manifest.permission.CAMERA);
         }
     }
 
     private void startCamera() {
-
         ListenableFuture<ProcessCameraProvider> cameraProviderFuture =
                 ProcessCameraProvider.getInstance(requireContext());
 
         cameraProviderFuture.addListener(() -> {
-
+            if (binding == null) {
+                return;
+            }
             try {
+                ProcessCameraProvider cameraProvider = cameraProviderFuture.get();
 
-                ProcessCameraProvider cameraProvider =
-                        cameraProviderFuture.get();
+                Preview preview = new Preview.Builder().build();
+                preview.setSurfaceProvider(binding.previewView.getSurfaceProvider());
 
-                Preview preview = new Preview.Builder()
-                        .build();
+                imageCapture = new ImageCapture.Builder().build();
 
-                preview.setSurfaceProvider(
-                        binding.previewView.getSurfaceProvider()
-                );
-
-                imageCapture = new ImageCapture.Builder()
-                        .build();
-
-                CameraSelector cameraSelector =
-                        CameraSelector.DEFAULT_BACK_CAMERA;
+                CameraSelector cameraSelector = CameraSelector.DEFAULT_BACK_CAMERA;
 
                 cameraProvider.unbindAll();
-
-                cameraProvider.bindToLifecycle(
-                        this,
-                        cameraSelector,
-                        preview,
-                        imageCapture
-                );
-
+                cameraProvider.bindToLifecycle(this, cameraSelector, preview, imageCapture);
             } catch (Exception e) {
-
                 e.printStackTrace();
-
-                Toast.makeText(
-                        requireContext(),
-                        "Failed to start camera.",
-                        Toast.LENGTH_SHORT
-                ).show();
+                toast("Failed to start camera.");
             }
-
         }, ContextCompat.getMainExecutor(requireContext()));
     }
 
     private void takePhoto() {
-
         if (imageCapture == null) {
-            Toast.makeText(
-                    requireContext(),
-                    "Camera is not ready.",
-                    Toast.LENGTH_SHORT
-            ).show();
-
+            toast("Camera is not ready.");
             return;
         }
 
-        File photoFile = new File(
-                requireContext().getCacheDir(),
-                "trashgo_scan.jpg"
-        );
+        File photoFile = new File(requireContext().getCacheDir(), "trashgo_scan.jpg");
 
         ImageCapture.OutputFileOptions outputOptions =
-                new ImageCapture.OutputFileOptions.Builder(photoFile)
-                        .build();
+                new ImageCapture.OutputFileOptions.Builder(photoFile).build();
 
         imageCapture.takePicture(
                 outputOptions,
                 cameraExecutor,
                 new ImageCapture.OnImageSavedCallback() {
-
                     @Override
                     public void onImageSaved(
                             @NonNull ImageCapture.OutputFileResults outputFileResults) {
-
                         Uri imageUri = Uri.fromFile(photoFile);
-
-                        requireActivity().runOnUiThread(() ->
-                                processCapturedImage(imageUri));
+                        mainHandler.post(() -> processCapturedImage(imageUri));
                     }
 
                     @Override
-                    public void onError(
-                            @NonNull ImageCaptureException exception) {
-
-                        requireActivity().runOnUiThread(() -> Toast.makeText(
-                                requireContext(),
-                                "Failed to capture photo: "
-                                        + exception.getMessage(),
-                                Toast.LENGTH_LONG
-                        ).show());
+                    public void onError(@NonNull ImageCaptureException exception) {
+                        mainHandler.post(() ->
+                                toast("Failed to capture photo: " + exception.getMessage()));
                     }
                 }
         );
     }
 
     private void processCapturedImage(Uri imageUri) {
+        if (binding == null) {
+            return;
+        }
 
+        String path = imageUri.getPath();
+        Bitmap bitmap = decodeSampled(path, MAX_SCAN_PX);
+
+        if (bitmap == null) {
+            toast("Failed to load captured image.");
+            return;
+        }
+
+        sendToAi(bitmap, path);
+    }
+
+    @Nullable
+    private static Bitmap decodeSampled(@Nullable String path, int maxPx) {
+        if (path == null || path.isEmpty()) {
+            return null;
+        }
         try {
+            BitmapFactory.Options bounds = new BitmapFactory.Options();
+            bounds.inJustDecodeBounds = true;
+            BitmapFactory.decodeFile(path, bounds);
 
-            Bitmap bitmap = BitmapFactory.decodeFile(
-                    imageUri.getPath()
-            );
-
-            if (bitmap == null) {
-
-                Toast.makeText(
-                        requireContext(),
-                        "Failed to load captured image.",
-                        Toast.LENGTH_SHORT
-                ).show();
-
-                return;
+            int longest = Math.max(bounds.outWidth, bounds.outHeight);
+            int sample = 1;
+            while (longest / sample > maxPx) {
+                sample *= 2;
             }
 
-            sendToAi(bitmap, imageUri.getPath());
-
+            BitmapFactory.Options options = new BitmapFactory.Options();
+            options.inSampleSize = sample;
+            return BitmapFactory.decodeFile(path, options);
         } catch (Exception e) {
-
             e.printStackTrace();
-
-            Toast.makeText(
-                    requireContext(),
-                    "Failed to process image.",
-                    Toast.LENGTH_SHORT
-            ).show();
+            return null;
+        } catch (OutOfMemoryError e) {
+            e.printStackTrace();
+            return null;
         }
     }
 
     private void sendToAi(Bitmap bitmap, String photoPath) {
+        if (binding == null) {
+            return;
+        }
         binding.loadingOverlay.setVisibility(View.VISIBLE);
 
         geminiRepository.classifyWaste(bitmap, new GeminiRepository.GeminiCallback() {
             @Override
             public void onSuccess(GeminiResponse response) {
-                if (isAdded()) {
-                    binding.loadingOverlay.setVisibility(View.GONE);
-                    showResult(response, photoPath);
+                if (binding == null) {
+                    return;
                 }
+                binding.loadingOverlay.setVisibility(View.GONE);
+                showResult(response, photoPath);
             }
 
             @Override
             public void onError(String message) {
-                if (isAdded()) {
-                    binding.loadingOverlay.setVisibility(View.GONE);
-                    Toast.makeText(requireContext(), message, Toast.LENGTH_LONG).show();
+                if (binding == null) {
+                    return;
                 }
+                binding.loadingOverlay.setVisibility(View.GONE);
+                toast(message);
             }
         });
     }
 
     private void showResult(GeminiResponse response, String photoPath) {
-        new com.pinduoduo.trashgo.data.repository.ScanHistoryStore(requireContext())
+        Context context = getContext();
+        if (context == null) {
+            return;
+        }
+
+        new com.pinduoduo.trashgo.data.repository.ScanHistoryStore(context)
                 .record(response.getItemName(), response.getCategory());
         try {
             com.pinduoduo.trashgo.data.model.WasteCategory scannedCategory =
                     com.pinduoduo.trashgo.data.model.WasteCategory.valueOf(
                             response.getCategory().toUpperCase(java.util.Locale.US));
-            new com.pinduoduo.trashgo.data.repository.DisposalSessionManager(requireContext())
+            new com.pinduoduo.trashgo.data.repository.DisposalSessionManager(context)
                     .startPendingScan(scannedCategory,
                             com.pinduoduo.trashgo.data.repository.PointsRepositoryImpl.getCategoryPoints(scannedCategory));
         } catch (IllegalArgumentException | NullPointerException ignored) {
-            // Unknown classifications remain in history but cannot start a disposal session.
         }
-        getParentFragmentManager()
-                .beginTransaction()
+
+        FragmentManager fm = getParentFragmentManager();
+        if (fm.isDestroyed()) {
+            return;
+        }
+
+        FragmentTransaction tx = fm.beginTransaction()
                 .replace(R.id.fragment_container, ResultFragment.newInstance(
                         response.getCategory(),
                         response.getConfidence(),
                         response.getTip(),
                         photoPath))
-                .addToBackStack(null)
-                .commit();
+                .addToBackStack(null);
+
+        if (fm.isStateSaved()) {
+            tx.commitAllowingStateLoss();
+        } else {
+            tx.commit();
+        }
     }
 
     @Override
     public void onDestroyView() {
-
         super.onDestroyView();
+
+        mainHandler.removeCallbacksAndMessages(null);
 
         if (cameraExecutor != null) {
             cameraExecutor.shutdown();

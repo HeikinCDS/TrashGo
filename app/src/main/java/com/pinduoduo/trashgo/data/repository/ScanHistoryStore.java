@@ -8,7 +8,6 @@ import com.google.gson.reflect.TypeToken;
 import com.pinduoduo.trashgo.data.model.ScanHistoryEntry;
 import java.util.*;
 
-/** Device-local history, isolated by the account that performed the scan. */
 public final class ScanHistoryStore {
     private static final Object LOCK = new Object();
     private final SharedPreferences prefs;

@@ -13,7 +13,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class VoucherAdapter extends RecyclerView.Adapter<VoucherAdapter.VoucherViewHolder> {
-
     public interface OnRedeemClickListener {
         void onRedeemClick(@NonNull Voucher voucher);
     }

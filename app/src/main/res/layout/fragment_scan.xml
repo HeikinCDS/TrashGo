@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
-
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -11,8 +10,6 @@
         android:id="@+id/previewView"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
-
-    <!-- ===== Framing guide: four corners, centred ===== -->
 
     <FrameLayout
         android:layout_width="230dp"
@@ -59,8 +56,6 @@
         android:shadowDx="0"
         android:shadowDy="1" />
 
-    <!-- ===== Close ===== -->
-
     <ImageButton
         android:id="@+id/btnClose"
         android:layout_width="40dp"
@@ -73,7 +68,6 @@
         android:padding="11dp"
         android:contentDescription="@string/close" />
 
-
     <Button
         android:id="@+id/captureButton"
         android:layout_width="72dp"
@@ -84,8 +78,6 @@
         android:text="@null"
         android:stateListAnimator="@null"
         android:contentDescription="@string/scan_waste" />
-
-    <!-- ===== Loading overlay ===== -->
 
     <FrameLayout
         android:id="@+id/loadingOverlay"

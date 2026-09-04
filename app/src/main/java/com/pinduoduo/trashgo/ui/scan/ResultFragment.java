@@ -24,7 +24,6 @@ import java.io.File;
 import java.util.Locale;
 
 public class ResultFragment extends Fragment {
-
     private static final String ARG_CATEGORY = "arg_category";
     private static final String ARG_CONFIDENCE = "arg_confidence";
     private static final String ARG_TIP = "arg_tip";

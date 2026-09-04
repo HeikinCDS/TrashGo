@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -17,7 +18,6 @@ import com.pinduoduo.trashgo.util.GeoUtils;
 import com.pinduoduo.trashgo.util.Prefs;
 
 public class SettingsSheet extends BottomSheetDialogFragment {
-
     public static final String TAG = "SettingsSheet";
 
     private SheetSettingsBinding binding;
@@ -47,6 +47,13 @@ public class SettingsSheet extends BottomSheetDialogFragment {
         binding.settingsMilesSwitch.setOnCheckedChangeListener((b, checked) -> {
             Prefs.setUseMiles(requireContext(), checked);
             updateUnitHint();
+        });
+
+        binding.settingsReplayTour.setOnClickListener(v -> {
+            Prefs.setTourSeen(requireContext(), false);
+            dismiss();
+            Toast.makeText(requireContext(), R.string.settings_replay_tour_hint,
+                    Toast.LENGTH_LONG).show();
         });
 
         binding.settingsVersion.setText(getString(

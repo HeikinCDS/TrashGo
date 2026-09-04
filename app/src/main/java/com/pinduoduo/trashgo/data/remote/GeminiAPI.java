@@ -6,7 +6,6 @@ import retrofit2.http.POST;
 import retrofit2.http.Query;
 
 public interface GeminiAPI {
-
     @POST("v1/models/gemini-3.6-flash:generateContent")
     Call<GeminiRawResponse> generateContent(
             @Query("key") String apiKey,

@@ -9,11 +9,9 @@ import com.pinduoduo.trashgo.util.GeoUtils;
 import java.util.Locale;
 
 public final class DropOffVerifier {
-
     public static final String PAYLOAD_PREFIX = "TRASHGO:DROP_OFF:";
     public static final double MAX_DISTANCE_METRES = 200d;
     public static final long COOLDOWN_MILLIS = 30L * 60L * 1000L;
-
 
     public static boolean enforceDistance = false;
 
@@ -45,7 +43,6 @@ public final class DropOffVerifier {
             boolean mockLocation,
             long lastClaimMillis,
             long nowMillis) {
-
         String scannedId = parseId(payload);
         if (scannedId == null) {
             return VerificationResult.BAD_PAYLOAD;

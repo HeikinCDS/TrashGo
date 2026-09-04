@@ -135,4 +135,50 @@
     <string name="history_dropped">Dropped off: %1$s</string>
     <string name="history_pending">Not dropped off yet</string>
     <string name="history_station">Drop-off: %1$s</string>
+    <string name="leaderboard_you">YOU</string>
+    <string name="leaderboard_ranking">Ranking</string>
+    <string name="leaderboard_items_recycled">%1$d items recycled</string>
+    <string name="leaderboard_place_one">1</string>
+    <string name="leaderboard_place_two">2</string>
+    <string name="leaderboard_place_three">3</string>
+    <string name="leaderboard_your_position">Your position</string>
+    <string name="leaderboard_points_label">points</string>
+    <string name="leaderboard_rank_format">#%1$d</string>
+    <string name="leaderboard_gap_behind">%1$s points behind #%2$d</string>
+    <string name="leaderboard_gap_tied">Level with #%1$d</string>
+    <string name="leaderboard_leading">You are in the lead</string>
+    <string name="leaderboard_empty">No one is on the board yet. Confirm a drop-off to take the top spot.</string>
+    <string name="quest_objective_tag">Objective of the day</string>
+    <string name="quest_side_tag">Side quest</string>
+    <string name="quest_completed">Completed</string>
+    <string name="quest_progress">%1$d of %2$d</string>
+    <string name="settings_replay_tour">Show the walkthrough again</string>
+    <string name="settings_replay_tour_hint">The walkthrough will start next time you open the Home tab.</string>
+    <string name="tour_step_counter">Step %1$d of %2$d</string>
+    <string name="tour_next">Next</string>
+    <string name="tour_done">Got it</string>
+    <string name="tour_skip">Skip</string>
+    <string name="tour_stats_title">Your progress</string>
+    <string name="tour_stats_body">Points, items recycled and your daily streak. These update every time a drop-off is verified.</string>
+    <string name="tour_scan_title">Start with a photo</string>
+    <string name="tour_scan_body">Photograph an item and TrashGo identifies what it is made of, then tells you how to recycle it.</string>
+    <string name="tour_objective_title">Objective of the day</string>
+    <string name="tour_objective_body">A new challenge each day. Complete it and you earn bonus points on top of what the item itself is worth.</string>
+    <string name="tour_nearest_title">Nearest drop-off</string>
+    <string name="tour_nearest_body">The three closest centres, sorted by distance. Tap any of them to open it on the map.</string>
+    <string name="tour_map_title">Find a centre</string>
+    <string name="tour_map_body">Every drop-off point around campus. Arrive from a scan and the map shows only the ones that accept your material.</string>
+    <string name="tour_board_title">Compete</string>
+    <string name="tour_board_body">Ranked by lifetime points earned. Spending points on vouchers does not lower your rank.</string>
+    <string name="tour_profile_title">Your account</string>
+    <string name="tour_profile_body">Your totals, your scan history, and settings such as sound and distance units.</string>
+
+    <string name="history_view">View scan history</string>
+    <string name="history_title">Scan history</string>
+    <string name="history_close">Close</string>
+    <plurals name="history_count">
+        <item quantity="one">%d scan saved on this phone</item>
+        <item quantity="other">%d scans saved on this phone</item>
+    </plurals>
+
 </resources>

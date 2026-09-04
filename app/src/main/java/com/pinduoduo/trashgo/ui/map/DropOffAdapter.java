@@ -18,7 +18,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class DropOffAdapter extends RecyclerView.Adapter<DropOffAdapter.ViewHolder> {
-
     public interface OnPointClickListener {
         void onPointClicked(@NonNull DropOffPoint point);
     }

@@ -22,7 +22,6 @@ import com.pinduoduo.trashgo.ui.onboarding.OnboardingActivity;
 import com.pinduoduo.trashgo.util.Prefs;
 
 public class SplashActivity extends AppCompatActivity {
-
     private static final String TAG = "SplashActivity";
 
     private static final long HOLD_MS = 1900L;

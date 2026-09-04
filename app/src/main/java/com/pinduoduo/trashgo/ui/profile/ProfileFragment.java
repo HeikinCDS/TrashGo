@@ -8,6 +8,8 @@ import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -42,8 +44,9 @@ public class ProfileFragment extends Fragment {
     private static final int DECODE_MAX_SIZE = 1024;
     private static final int SAVED_PHOTO_SIZE = 512;
 
+    private final Handler mainHandler = new Handler(Looper.getMainLooper());
+
     private FragmentProfileBinding binding;
-    private int historyLimit = 10;
 
     @Override
     public void onResume() {
@@ -53,31 +56,16 @@ public class ProfileFragment extends Fragment {
 
     private void renderHistory() {
         if (binding == null) return;
-        java.util.List<com.pinduoduo.trashgo.data.model.ScanHistoryEntry> entries =
-                new com.pinduoduo.trashgo.data.repository.ScanHistoryStore(requireContext()).read();
-        binding.historyEntries.removeAllViews();
-        binding.historyStatus.setText(entries.isEmpty() ? R.string.history_empty : R.string.history_local);
-        java.text.DateFormat dateFormat = java.text.DateFormat.getDateTimeInstance(
-                java.text.DateFormat.MEDIUM, java.text.DateFormat.SHORT);
-        for (int i = 0; i < Math.min(historyLimit, entries.size()); i++) {
-            com.pinduoduo.trashgo.data.model.ScanHistoryEntry entry = entries.get(i);
-            com.pinduoduo.trashgo.databinding.ItemScanHistoryBinding row =
-                    com.pinduoduo.trashgo.databinding.ItemScanHistoryBinding.inflate(
-                            getLayoutInflater(), binding.historyEntries, false);
-            row.historyItem.setText(entry.itemName + " · " + entry.category);
-            row.historyScanTime.setText(getString(R.string.history_scanned,
-                    dateFormat.format(new java.util.Date(entry.scannedAt))));
-            row.historyLocation.setText(entry.droppedOffAt == 0 ? getString(R.string.history_pending)
-                    : getString(R.string.history_station, entry.dropOffName == null
-                            ? entry.dropOffId : entry.dropOffName));
-            row.historyDropTime.setVisibility(entry.droppedOffAt == 0 ? View.GONE : View.VISIBLE);
-            if (entry.droppedOffAt != 0) row.historyDropTime.setText(getString(R.string.history_dropped,
-                    dateFormat.format(new java.util.Date(entry.droppedOffAt))));
-            binding.historyEntries.addView(row.getRoot());
-        }
-        binding.historyMore.setVisibility(entries.size() > historyLimit ? View.VISIBLE : View.GONE);
-        binding.historyMore.setOnClickListener(v -> { historyLimit += 10; renderHistory(); });
+        int count = new com.pinduoduo.trashgo.data.repository.ScanHistoryStore(
+                requireContext()).read().size();
+        binding.historyStatus.setText(count == 0
+                ? getString(R.string.history_empty)
+                : getResources().getQuantityString(R.plurals.history_count, count, count));
+        binding.historyView.setEnabled(count > 0);
+        binding.historyView.setOnClickListener(v ->
+                ScanHistorySheet.show(getChildFragmentManager()));
     }
+
     private final ExecutorService photoExecutor = Executors.newSingleThreadExecutor();
     private final ActivityResultLauncher<String> photoPickerLauncher =
             registerForActivityResult(new ActivityResultContracts.GetContent(), uri -> {
@@ -90,7 +78,6 @@ public class ProfileFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
-
         binding = FragmentProfileBinding.inflate(inflater, container, false);
         binding.signOutButton.setOnClickListener(view -> signOut());
         binding.profileSettings.setOnClickListener(v ->
@@ -182,25 +169,22 @@ public class ProfileFragment extends Fragment {
                     }
                 }
 
-                requireActivity().runOnUiThread(() -> {
+                mainHandler.post(() -> {
                     if (binding == null) {
                         return;
                     }
                     binding.profileProgress.setVisibility(View.GONE);
                     showProfilePhoto(resized);
-                    Toast.makeText(requireContext(), R.string.profile_photo_updated,
+                    Toast.makeText(appContext, R.string.profile_photo_updated,
                             Toast.LENGTH_SHORT).show();
                 });
             } catch (Exception error) {
-                if (!isAdded()) {
-                    return;
-                }
-                requireActivity().runOnUiThread(() -> {
+                mainHandler.post(() -> {
                     if (binding == null) {
                         return;
                     }
                     binding.profileProgress.setVisibility(View.GONE);
-                    Toast.makeText(requireContext(), R.string.profile_photo_error,
+                    Toast.makeText(appContext, R.string.profile_photo_error,
                             Toast.LENGTH_LONG).show();
                 });
             }
@@ -261,7 +245,6 @@ public class ProfileFragment extends Fragment {
                 return 270;
             }
         } catch (IOException ignored) {
-            // The selected image has no readable EXIF orientation.
         }
         return 0;
     }
@@ -313,6 +296,7 @@ public class ProfileFragment extends Fragment {
     @Override
     public void onDestroyView() {
         super.onDestroyView();
+        mainHandler.removeCallbacksAndMessages(null);
         binding = null;
     }
 

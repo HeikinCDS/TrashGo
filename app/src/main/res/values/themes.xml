@@ -13,7 +13,7 @@
         <item name="colorOnSurfaceVariant">@color/trashgo_on_surface_variant</item>
         <item name="colorOutline">@color/trashgo_outline</item>
         <item name="colorOutlineVariant">@color/trashgo_divider</item>
-        <!--  White status bar with dark icons; the app is a light design.  -->
+
         <item name="android:statusBarColor">@color/trashgo_surface</item>
         <item name="android:navigationBarColor">@color/trashgo_surface</item>
         <item name="android:windowLightStatusBar" tools:targetApi="m">true</item>
@@ -90,6 +90,18 @@
         <item name="android:minHeight">52dp</item>
         <item name="cornerRadius">12dp</item>
     </style>
+    <style name="Widget.TrashGo.Button.Danger" parent="Widget.Material3.Button.TonalButton">
+        <item name="backgroundTint">@color/trashgo_error_container</item>
+        <item name="android:textColor">@color/trashgo_error</item>
+        <item name="rippleColor">@color/trashgo_error</item>
+        <item name="android:textSize">16sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textAllCaps">false</item>
+        <item name="android:letterSpacing">0</item>
+        <item name="android:minHeight">52dp</item>
+        <item name="cornerRadius">12dp</item>
+    </style>
+
     <style name="Widget.TrashGo.Button.Text" parent="Widget.Material3.Button.TextButton">
         <item name="android:textColor">@color/trashgo_primary</item>
         <item name="android:textSize">15sp</item>

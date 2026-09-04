@@ -5,9 +5,9 @@
     android:id="@+id/quest_card"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginBottom="12dp"
-    app:cardCornerRadius="16dp"
-    app:cardElevation="1dp"
+    android:layout_marginBottom="10dp"
+    app:cardCornerRadius="14dp"
+    app:cardElevation="0dp"
     app:strokeWidth="1dp"
     app:strokeColor="@color/trashgo_divider"
     app:cardBackgroundColor="@color/trashgo_surface">
@@ -16,81 +16,84 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:padding="16dp">
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:gravity="center_vertical">
-
-            <TextView
-                android:id="@+id/quest_tag"
-                style="@style/TextAppearance.TrashGo.Caption"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:background="@drawable/bg_tile_rounded"
-                android:paddingStart="10dp"
-                android:paddingEnd="10dp"
-                android:paddingTop="3dp"
-                android:paddingBottom="3dp"
-                android:textSize="14sp"
-                android:textStyle="bold"
-                android:textColor="@color/trashgo_primary"
-                tools:text="Objective of the Day" />
-
-            <Space
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1" />
-
-            <TextView
-                android:id="@+id/quest_reward"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textSize="20sp"
-                android:textStyle="bold"
-                android:textColor="@color/trashgo_primary"
-                tools:text="+100 Pts" />
-
-        </LinearLayout>
-
-
-        <TextView
-            android:id="@+id/quest_title"
-            style="@style/TextAppearance.TrashGo.Title"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:textSize="20sp"
-            tools:text="Collect and throw 5 Paper" />
+        android:paddingHorizontal="18dp"
+        android:paddingVertical="16dp">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:gravity="center_vertical"
-            android:layout_marginTop="10dp">
+            android:baselineAligned="false">
 
-            <ProgressBar
-                android:id="@+id/quest_progress_bar"
-                style="?android:attr/progressBarStyleHorizontal"
+            <TextView
+                android:id="@+id/quest_tag"
+                style="@style/TextAppearance.TrashGo.Label"
                 android:layout_width="0dp"
-                android:layout_height="12dp"
+                android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:max="5"
-                android:progress="2"
-                android:progressTint="@color/trashgo_primary"
-                android:progressBackgroundTint="@color/trashgo_divider" />
+                android:textColor="@color/trashgo_primary"
+                tools:text="OBJECTIVE OF THE DAY" />
+
+            <TextView
+                android:id="@+id/quest_reward"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="12dp"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                android:fontFeatureSettings="tnum"
+                android:textColor="@color/trashgo_primary"
+                tools:text="+100" />
+
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/quest_title"
+            style="@style/TextAppearance.TrashGo.Title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="6dp"
+            android:textSize="18sp"
+            tools:text="Scan any electronic waste item" />
+
+        <ProgressBar
+            android:id="@+id/quest_progress_bar"
+            style="?android:attr/progressBarStyleHorizontal"
+            android:layout_width="match_parent"
+            android:layout_height="4dp"
+            android:layout_marginTop="16dp"
+            android:max="5"
+            android:progress="2"
+            android:progressTint="@color/trashgo_primary"
+            android:progressBackgroundTint="@color/trashgo_divider" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:layout_marginTop="8dp">
+
+            <ImageView
+                android:id="@+id/quest_check"
+                android:layout_width="14dp"
+                android:layout_height="14dp"
+                android:layout_marginEnd="5dp"
+                android:src="@drawable/ic_check"
+                android:contentDescription="@null"
+                android:visibility="gone"
+                app:tint="@color/trashgo_primary"
+                tools:visibility="visible" />
 
             <TextView
                 android:id="@+id/quest_progress_text"
                 style="@style/TextAppearance.TrashGo.Caption"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="20dp"
-                android:textStyle="bold"
-                tools:text="2 / 5" />
+                android:layout_weight="1"
+                android:fontFeatureSettings="tnum"
+                tools:text="Completed" />
 
         </LinearLayout>
 

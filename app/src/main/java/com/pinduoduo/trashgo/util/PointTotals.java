@@ -1,6 +1,5 @@
 package com.pinduoduo.trashgo.util;
 
-/** Balance can be spent; lifetime earnings never decrease on redemption. */
 public final class PointTotals {
     private PointTotals() {}
     public static long balance(Long value) { return value == null ? 0L : value; }

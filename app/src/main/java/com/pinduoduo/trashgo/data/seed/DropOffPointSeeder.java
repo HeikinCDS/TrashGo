@@ -15,7 +15,6 @@ import java.util.Map;
 public final class DropOffPointSeeder {
     private static final String TAG = "DropOffPointSeeder";
 
-    // UTAR Kampar Campus centre. Change only these values to move the whole simulation.
     private static final double CAMPUS_LATITUDE = 4.3366214;
     private static final double CAMPUS_LONGITUDE = 101.1421110;
 

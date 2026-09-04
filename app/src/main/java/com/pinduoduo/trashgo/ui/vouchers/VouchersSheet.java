@@ -27,7 +27,6 @@ import java.util.List;
 import java.util.Random;
 
 public class VouchersSheet extends BottomSheetDialogFragment {
-
     public static final String TAG = "VouchersSheet";
 
     private SheetVouchersBinding binding;
@@ -53,17 +52,14 @@ public class VouchersSheet extends BottomSheetDialogFragment {
         super.onViewCreated(view, savedInstanceState);
         pointsRepository = new PointsRepositoryImpl();
 
-        // Available Rewards Adapter
         availableAdapter = new VoucherAdapter(this::onRedeemVoucher);
         binding.vouchersRecyclerView.setLayoutManager(new LinearLayoutManager(requireContext()));
         binding.vouchersRecyclerView.setAdapter(availableAdapter);
 
-        // Your Vouchers Adapter
         myVoucherAdapter = new MyVoucherAdapter();
         binding.myVouchersRecyclerView.setLayoutManager(new LinearLayoutManager(requireContext()));
         binding.myVouchersRecyclerView.setAdapter(myVoucherAdapter);
 
-        // Tab click listeners
         binding.btnTabAvailable.setOnClickListener(v -> switchToTab(true));
         binding.btnTabMyVouchers.setOnClickListener(v -> switchToTab(false));
 

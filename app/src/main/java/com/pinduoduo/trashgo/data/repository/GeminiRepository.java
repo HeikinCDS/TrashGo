@@ -17,7 +17,6 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class GeminiRepository {
-
     private final GeminiAPI apiService;
     private final String apiKey = BuildConfig.GEMINI_API_KEY;
     private final Gson gson = new Gson();
@@ -38,7 +37,7 @@ public class GeminiRepository {
         }
 
         String base64Image = ImageUtils.processImage(bitmap);
-        
+
         String prompt = "Analyze this image and identify the waste item. " +
                 "Categorize it into one of these: PLASTIC, PAPER, GLASS, METAL, EWASTE, ORGANIC, GENERAL. " +
                 "Also include an itemName field containing a short name for the visible object (for example aluminium can). " +
@@ -47,7 +46,7 @@ public class GeminiRepository {
                 "Return ONLY the JSON string.";
 
         GeminiRequest request = new GeminiRequest(prompt, base64Image);
-        
+
         apiService.generateContent(apiKey, request).enqueue(new Callback<GeminiRawResponse>() {
             @Override
             public void onResponse(Call<GeminiRawResponse> call, Response<GeminiRawResponse> response) {
@@ -57,15 +56,14 @@ public class GeminiRepository {
                                 .getCandidates().get(0)
                                 .getContent().getParts().get(0)
                                 .getText();
-                        
+
                         Log.d("GeminiAI", "Raw AI Response: " + textResponse);
 
-                        // Handle cases where Gemini might wrap the JSON in Markdown code blocks
                         String cleanJson = textResponse.trim();
                         if (cleanJson.startsWith("```")) {
                             cleanJson = cleanJson.substring(cleanJson.indexOf("{"), cleanJson.lastIndexOf("}") + 1);
                         }
-                        
+
                         GeminiResponse result = gson.fromJson(cleanJson, GeminiResponse.class);
                         callback.onSuccess(result);
                     } catch (Exception e) {

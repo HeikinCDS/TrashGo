@@ -8,13 +8,13 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 import com.pinduoduo.trashgo.R;
 import com.pinduoduo.trashgo.databinding.DialogDisposalSuccessBinding;
 
 public class DisposalSuccessDialog extends BottomSheetDialogFragment {
-
     public static final String TAG = "DisposalSuccessDialog";
 
     private static final String ARG_POINTS = "arg_points";
@@ -30,7 +30,17 @@ public class DisposalSuccessDialog extends BottomSheetDialogFragment {
         args.putString(ARG_STATION, stationName);
         args.putString(ARG_QUEST_NOTICE, questNotice);
         dialog.setArguments(args);
-        dialog.show(fm, TAG);
+
+        if (fm.isDestroyed()) {
+            return;
+        }
+        if (fm.isStateSaved()) {
+            FragmentTransaction tx = fm.beginTransaction();
+            tx.add(dialog, TAG);
+            tx.commitAllowingStateLoss();
+        } else {
+            dialog.show(fm, TAG);
+        }
     }
 
     @Nullable

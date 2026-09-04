@@ -16,7 +16,6 @@ import java.util.Comparator;
 import java.util.List;
 
 public class DropOffRepository {
-
     public interface PointsCallback {
         void onLoaded(@NonNull List<DropOffPoint> points);
         void onError(@NonNull Exception e);
@@ -32,7 +31,6 @@ public class DropOffRepository {
         this.db = FirebaseFirestore.getInstance();
     }
 
-
     public void fetchAll(@NonNull PointsCallback callback) {
         db.collection(FirestoreContract.DropOffPoints.COLLECTION)
                 .get()
@@ -46,7 +44,6 @@ public class DropOffRepository {
                 .addOnFailureListener(callback::onError);
     }
 
-
     public void fetchById(@NonNull String id, @NonNull PointCallback callback) {
         db.collection(FirestoreContract.DropOffPoints.COLLECTION)
                 .document(id)
@@ -56,13 +53,11 @@ public class DropOffRepository {
                 .addOnFailureListener(e -> callback.onLoaded(null));
     }
 
-
     public static boolean accepts(@NonNull DropOffPoint p, @Nullable WasteCategory category) {
         return category != null
                 && p.getAcceptedCategories() != null
                 && p.getAcceptedCategories().contains(category);
     }
-
 
     @NonNull
     public static String acceptedLabel(@NonNull DropOffPoint p) {
@@ -78,7 +73,6 @@ public class DropOffRepository {
         return sb.toString();
     }
 
-
     @NonNull
     public static List<DropOffPoint> filterByCategory(@NonNull List<DropOffPoint> points,
                                                       @Nullable WasteCategory category) {
@@ -89,7 +83,6 @@ public class DropOffRepository {
         }
         return out;
     }
-
 
     @NonNull
     public static List<DropOffPoint> sortByDistance(@NonNull List<DropOffPoint> points,

@@ -5,22 +5,18 @@
     android:viewportWidth="108"
     android:viewportHeight="108">
 
-    <!-- Bin body -->
     <path
         android:fillColor="@color/trashgo_primary"
         android:pathData="M39,36h30l-2.5,40h-25z" />
 
-    <!-- Lid and handle -->
     <path
         android:fillColor="@color/trashgo_primary"
         android:pathData="M35,29h38v6H35zM47,24h14v5H47z" />
 
-    <!-- Stripes, knocked out of the bin -->
     <path
         android:fillColor="@color/trashgo_surface"
         android:pathData="M50,45h4v22h-4zM59,45h4v22h-4z" />
 
-    <!-- Recycling arrows -->
     <path
         android:fillColor="#8CC9AE"
         android:pathData="M30,48l7,-7v5c-5,6 -5,14 0,20l-4,4c-8,-8 -9,-16 -3,-22zM78,48l-7,-7v5c5,6 5,14 0,20l4,4c8,-8 9,-16 3,-22z" />

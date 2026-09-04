@@ -55,7 +55,7 @@ public class QuestRepository {
         Context app = context.getApplicationContext();
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         DocumentReference ref = db.collection("users").document(user.getUid());
-        // Persist the claim and balance together; transaction retries cannot pay twice.
+
         db.runTransaction(transaction -> {
             DocumentSnapshot snapshot = transaction.get(ref);
             int reward = DailyObjective.reward(quest, category,

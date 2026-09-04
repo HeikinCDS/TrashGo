@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/trashgo_surface"
-    android:fillViewport="true">
+    android:fillViewport="false">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -246,31 +246,24 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp" />
 
-        <LinearLayout
-            android:id="@+id/history_entries"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical" />
-
         <com.google.android.material.button.MaterialButton
-            android:id="@+id/history_more"
-            style="@style/Widget.TrashGo.Button.Text"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/history_more" />
-
-        <Space
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            android:minHeight="32dp" />
-
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/sign_out_button"
+            android:id="@+id/history_view"
             style="@style/Widget.TrashGo.Button.Tonal"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="24dp"
+            android:layout_marginTop="14dp"
+            android:text="@string/history_view" />
+
+        <View
+            style="@style/Widget.TrashGo.Divider"
+            android:layout_marginTop="32dp" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/sign_out_button"
+            style="@style/Widget.TrashGo.Button.Danger"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
             android:text="@string/sign_out" />
 
     </LinearLayout>

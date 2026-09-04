@@ -1,10 +1,13 @@
 package com.pinduoduo.trashgo.ui.map;
 
+import android.graphics.drawable.Animatable;
 import android.location.Location;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.DecelerateInterpolator;
+import android.view.animation.OvershootInterpolator;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -43,10 +46,8 @@ import java.util.List;
 import java.util.Locale;
 
 public class MapFragment extends Fragment implements OnMapReadyCallback {
-
     private static final String ARG_CATEGORY = "arg_category";
 
-    /** UTAR Kampar campus centre — used until we have a GPS fix. */
     private static final LatLng CAMPUS = new LatLng(4.3366214, 101.1421110);
     private static final float CAMPUS_ZOOM = 16f;
 
@@ -59,7 +60,6 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
     private ActivityResultLauncher<String[]> permissionLauncher;
     private ActivityResultLauncher<ScanOptions> qrLauncher;
 
-    /** The point whose QR code the user is currently scanning. */
     @Nullable private DropOffPoint pendingPoint;
 
     private final List<DropOffPoint> allPoints = new ArrayList<>();
@@ -68,7 +68,6 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
     @Nullable private WasteCategory filterCategory;
     @Nullable private Double userLat, userLng;
 
-    /** Called by Package B's result screen to open the map filtered to one material. */
     @NonNull
     public static MapFragment newInstance(@Nullable WasteCategory category) {
         MapFragment f = new MapFragment();
@@ -91,7 +90,6 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
             }
         }
 
-        // Must be registered before the fragment reaches STARTED, hence onCreate.
         permissionLauncher = registerForActivityResult(
                 new ActivityResultContracts.RequestMultiplePermissions(),
                 result -> {
@@ -131,7 +129,6 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         binding.recyclerDropoffs.setLayoutManager(new LinearLayoutManager(requireContext()));
         binding.recyclerDropoffs.setAdapter(adapter);
 
-        // getChildFragmentManager, not parent — the map lives inside THIS fragment.
         SupportMapFragment mapFragment = (SupportMapFragment)
                 getChildFragmentManager().findFragmentById(R.id.map_container);
         if (mapFragment != null) mapFragment.getMapAsync(this);
@@ -176,7 +173,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         repository.fetchAll(new DropOffRepository.PointsCallback() {
             @Override
             public void onLoaded(@NonNull List<DropOffPoint> points) {
-                if (!isAdded()) return;          // fragment gone while network was in flight
+                if (!isAdded()) return;
                 allPoints.clear();
                 allPoints.addAll(points);
                 pointsLoaded = true;
@@ -218,7 +215,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
                 : String.format(Locale.US, "%d accept %s", visible.size(),
                 filterCategory.name().toLowerCase(Locale.US)));
 
-        if (googleMap == null) return;    // markers get drawn when onMapReady fires
+        if (googleMap == null) return;
 
         googleMap.clear();
         for (DropOffPoint p : visible) {
@@ -228,7 +225,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
                     .snippet(DropOffRepository.acceptedLabel(p))
                     .icon(BitmapDescriptorFactory.defaultMarker(
                             BitmapDescriptorFactory.HUE_GREEN)));
-            if (m != null) m.setTag(p);    // so the click listener knows which point
+            if (m != null) m.setTag(p);
         }
     }
 
@@ -263,7 +260,6 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
             startClaim(p);
         });
 
-        // also recentre the map behind the sheet
         if (googleMap != null) {
             googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(
                     new LatLng(p.getLatitude(), p.getLongitude()), 18f));
@@ -295,10 +291,6 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
             }
         }
     }
-
-    // ------------------------------------------------------------------
-    // Claiming points
-    // ------------------------------------------------------------------
 
     private void startClaim(@NonNull DropOffPoint p) {
         if (filterCategory == null) {
@@ -383,14 +375,51 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         View v = LayoutInflater.from(requireContext())
                 .inflate(R.layout.sheet_claim_result, null);
 
+        View badge = v.findViewById(R.id.claim_badge);
+        View ring = v.findViewById(R.id.claim_ring);
         ImageView icon = v.findViewById(R.id.claim_icon);
-        icon.setImageResource(success ? R.drawable.ic_check : R.drawable.ic_close);
+        TextView headlineView = v.findViewById(R.id.claim_headline);
+        TextView detailView = v.findViewById(R.id.claim_detail);
+
+        badge.setBackgroundResource(
+                success ? R.drawable.bg_badge_success : R.drawable.bg_badge_error);
+        icon.setImageResource(success ? R.drawable.avd_check : R.drawable.avd_cross);
         icon.setColorFilter(androidx.core.content.ContextCompat.getColor(requireContext(),
                 success ? R.color.trashgo_primary : R.color.trashgo_error));
 
-        ((TextView) v.findViewById(R.id.claim_headline)).setText(headline);
-        ((TextView) v.findViewById(R.id.claim_detail)).setText(detail);
+        android.graphics.drawable.Drawable mark = icon.getDrawable();
+        if (mark instanceof Animatable) {
+            ((Animatable) mark).start();
+        }
+
+        headlineView.setText(headline);
+        detailView.setText(detail);
         v.findViewById(R.id.claim_done).setOnClickListener(b -> sheet.dismiss());
+
+        badge.setScaleX(0.6f);
+        badge.setScaleY(0.6f);
+        badge.animate()
+                .alpha(1f).scaleX(1f).scaleY(1f)
+                .setStartDelay(60)
+                .setDuration(420)
+                .setInterpolator(new OvershootInterpolator(2.2f))
+                .start();
+
+        if (success) {
+            ring.setVisibility(View.VISIBLE);
+            ring.setAlpha(0.5f);
+            ring.animate()
+                    .alpha(0f).scaleX(1.9f).scaleY(1.9f)
+                    .setStartDelay(180)
+                    .setDuration(620)
+                    .setInterpolator(new DecelerateInterpolator(1.4f))
+                    .start();
+        } else {
+            ring.setVisibility(View.GONE);
+        }
+
+        rise(headlineView, 200);
+        rise(detailView, 280);
 
         sheet.setContentView(v);
         sheet.show();
@@ -398,6 +427,18 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         if (success) {
             requestFix();
         }
+    }
+
+    private void rise(@NonNull View view, long delayMs) {
+        float offset = 12f * getResources().getDisplayMetrics().density;
+        view.setTranslationY(offset);
+        view.animate()
+                .alpha(1f)
+                .translationY(0f)
+                .setStartDelay(delayMs)
+                .setDuration(420)
+                .setInterpolator(new DecelerateInterpolator(1.6f))
+                .start();
     }
 
     private static int labelFor(@NonNull WasteCategory category) {

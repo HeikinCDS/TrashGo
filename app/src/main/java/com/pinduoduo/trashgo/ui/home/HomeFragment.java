@@ -23,6 +23,7 @@ import com.pinduoduo.trashgo.data.repository.QuestRepository;
 import com.pinduoduo.trashgo.databinding.FragmentHomeBinding;
 import com.pinduoduo.trashgo.ui.map.DropOffAdapter;
 import com.pinduoduo.trashgo.ui.scan.ScanFragment;
+import com.pinduoduo.trashgo.ui.tour.AppTour;
 import com.pinduoduo.trashgo.ui.vouchers.VouchersSheet;
 import com.pinduoduo.trashgo.util.LocationHelper;
 import com.pinduoduo.trashgo.util.Prefs;
@@ -30,7 +31,6 @@ import com.pinduoduo.trashgo.util.Prefs;
 import java.util.List;
 
 public class HomeFragment extends Fragment implements DropOffAdapter.OnPointClickListener {
-
     private static final int PREVIEW_COUNT = 3;
 
     private FragmentHomeBinding binding;
@@ -64,21 +64,17 @@ public class HomeFragment extends Fragment implements DropOffAdapter.OnPointClic
 
         binding.homeSeeAll.setOnClickListener(v -> openMapTab());
 
-        // Open Vouchers & Rewards Sheet
         View.OnClickListener openVouchersListener = v -> VouchersSheet.show(getChildFragmentManager());
         binding.btnOpenVouchers.setOnClickListener(openVouchersListener);
         binding.homeStatRow.setOnClickListener(openVouchersListener);
 
-        // Setup DropOff list adapter
         adapter = new DropOffAdapter(this);
         binding.homeNearestList.setLayoutManager(new LinearLayoutManager(requireContext()));
         binding.homeNearestList.setAdapter(adapter);
 
-        // Fetch Today's Objective of the Day
         QuestRepository questRepository = new QuestRepository();
         List<Quest> objectiveList = questRepository.getTodayQuests(requireContext());
 
-        // Setup Objective of the Day Adapter
         QuestAdapter objectiveAdapter = new QuestAdapter();
         binding.homeObjectiveList.setLayoutManager(new LinearLayoutManager(requireContext()));
         binding.homeObjectiveList.setAdapter(objectiveAdapter);
@@ -92,7 +88,6 @@ public class HomeFragment extends Fragment implements DropOffAdapter.OnPointClic
             }
             @Override
             public void onError(String message) {
-                // Keep this user's local completion state when offline.
             }
         });
 
@@ -102,6 +97,8 @@ public class HomeFragment extends Fragment implements DropOffAdapter.OnPointClic
         locationHelper = new LocationHelper(requireContext());
 
         loadNearest();
+
+        maybeStartTour();
     }
 
     private void loadUserStats() {
@@ -194,6 +191,32 @@ public class HomeFragment extends Fragment implements DropOffAdapter.OnPointClic
         if (nav != null) {
             nav.setSelectedItemId(R.id.nav_map);
         }
+    }
+
+    private void maybeStartTour() {
+        if (Prefs.tourSeen(requireContext())) {
+            return;
+        }
+        binding.getRoot().postDelayed(() -> {
+            if (binding == null || !isAdded()) {
+                return;
+            }
+            View nav = requireActivity().findViewById(R.id.bottom_navigation);
+
+            AppTour.with(requireActivity())
+                    .step(binding.homeStatRow, R.string.tour_stats_title, R.string.tour_stats_body)
+                    .step(binding.btnScanWaste, R.string.tour_scan_title, R.string.tour_scan_body)
+                    .step(binding.homeObjectiveList, R.string.tour_objective_title, R.string.tour_objective_body)
+                    .step(binding.homeNearestList, R.string.tour_nearest_title, R.string.tour_nearest_body)
+                    .step(nav == null ? null : nav.findViewById(R.id.nav_map),
+                            R.string.tour_map_title, R.string.tour_map_body)
+                    .step(nav == null ? null : nav.findViewById(R.id.nav_leaderboard),
+                            R.string.tour_board_title, R.string.tour_board_body)
+                    .step(nav == null ? null : nav.findViewById(R.id.nav_profile),
+                            R.string.tour_profile_title, R.string.tour_profile_body)
+                    .onFinished(() -> Prefs.setTourSeen(requireContext(), true))
+                    .start();
+        }, 700L);
     }
 
     @Override

@@ -5,7 +5,6 @@ import androidx.annotation.Nullable;
 import com.pinduoduo.trashgo.data.model.WasteCategory;
 
 public final class PointsTable {
-
     private PointsTable() {}
 
     public static int forCategory(@Nullable WasteCategory category) {

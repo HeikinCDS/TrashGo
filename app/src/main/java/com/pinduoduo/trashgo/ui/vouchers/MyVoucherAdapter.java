@@ -17,7 +17,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MyVoucherAdapter extends RecyclerView.Adapter<MyVoucherAdapter.MyVoucherViewHolder> {
-
     private final List<MyVoucher> vouchers = new ArrayList<>();
 
     public void submitList(List<MyVoucher> newList) {

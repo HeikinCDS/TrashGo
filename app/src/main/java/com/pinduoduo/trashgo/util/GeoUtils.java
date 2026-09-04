@@ -5,7 +5,6 @@ import androidx.annotation.NonNull;
 import java.util.Locale;
 
 public final class GeoUtils {
-
     private static final double EARTH_RADIUS_METRES = 6_371_000d;
 
     private static final double FEET_PER_METRE = 3.28084d;

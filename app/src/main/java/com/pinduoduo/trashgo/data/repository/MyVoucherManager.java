@@ -17,7 +17,6 @@ import java.util.List;
 import java.util.Locale;
 
 public class MyVoucherManager {
-
     private static final String PREF_NAME = "trashgo_my_vouchers_pref";
     private static final String KEY_VOUCHERS = "claimed_vouchers_json";
     private static final Gson gson = new Gson();
@@ -46,7 +45,7 @@ public class MyVoucherManager {
         String id = "my_v_" + System.currentTimeMillis();
 
         MyVoucher voucher = new MyVoucher(id, title, code, dateStr, pointsSpent);
-        current.add(0, voucher); // Latest first
+        current.add(0, voucher);
 
         SharedPreferences prefs = context.getApplicationContext()
                 .getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE);

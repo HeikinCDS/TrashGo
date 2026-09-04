@@ -1,13 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!--
-    One onboarding page — RESTYLED. Layout and styling only.
-    IDs unchanged: onboarding_image, onboarding_title, onboarding_body.
-    OnboardingAdapter still calls setImageResource / setText on exactly these.
-
-    The illustration now sits inside a tinted circle. The source icons are flat
-    single-colour vectors; on bare white they float, and the circle gives them a
-    footprint without inventing new artwork.
--->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"

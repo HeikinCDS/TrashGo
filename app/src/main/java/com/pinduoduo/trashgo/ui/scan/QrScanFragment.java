@@ -1,5 +1,6 @@
 package com.pinduoduo.trashgo.ui.scan;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,16 +16,16 @@ import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
 import com.google.common.util.concurrent.ListenableFuture;
-import com.pinduoduo.trashgo.R;
 import com.pinduoduo.trashgo.data.model.Quest;
 import com.pinduoduo.trashgo.data.model.WasteCategory;
+import com.pinduoduo.trashgo.data.repository.DisposalSessionManager;
 import com.pinduoduo.trashgo.data.repository.PointsRepositoryImpl;
+import com.pinduoduo.trashgo.data.repository.ScanHistoryStore;
 import com.pinduoduo.trashgo.databinding.FragmentQrScanBinding;
 
 import java.util.List;
 
 public class QrScanFragment extends Fragment {
-
     private static final String ARG_CATEGORY = "arg_category";
     private static final String ARG_STATION_ID = "arg_station_id";
     private static final String ARG_STATION_NAME = "arg_station_name";
@@ -33,6 +34,8 @@ public class QrScanFragment extends Fragment {
     private WasteCategory category = WasteCategory.GENERAL;
     private String stationName = "Disposal Station";
     private String stationId = "station_1";
+
+    private boolean submitting = false;
 
     public static QrScanFragment newInstance(@Nullable String categoryName, @Nullable String stationId, @Nullable String stationName) {
         QrScanFragment fragment = new QrScanFragment();
@@ -84,6 +87,9 @@ public class QrScanFragment extends Fragment {
                 ProcessCameraProvider.getInstance(requireContext());
 
         cameraProviderFuture.addListener(() -> {
+            if (binding == null) {
+                return;
+            }
             try {
                 ProcessCameraProvider cameraProvider = cameraProviderFuture.get();
                 Preview preview = new Preview.Builder().build();
@@ -92,7 +98,6 @@ public class QrScanFragment extends Fragment {
                 CameraSelector cameraSelector = CameraSelector.DEFAULT_BACK_CAMERA;
                 cameraProvider.unbindAll();
                 cameraProvider.bindToLifecycle(this, cameraSelector, preview);
-
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -100,27 +105,37 @@ public class QrScanFragment extends Fragment {
     }
 
     private void processQrDisposalConfirmation() {
-        final com.pinduoduo.trashgo.data.repository.ScanHistoryStore history =
-                new com.pinduoduo.trashgo.data.repository.ScanHistoryStore(requireContext());
+        if (submitting || binding == null) {
+            return;
+        }
+        submitting = true;
+
+        final Context appContext = requireContext().getApplicationContext();
+        final ScanHistoryStore history = new ScanHistoryStore(appContext);
         final String historyId = history.pendingId(category.name());
+
+        binding.btnConfirmQrScan.setEnabled(false);
         binding.qrLoadingOverlay.setVisibility(View.VISIBLE);
 
         new PointsRepositoryImpl().awardScanPoints(
-                requireContext(),
+                appContext,
                 category,
                 new PointsRepositoryImpl.AwardScanCallback() {
                     @Override
                     public void onSuccess(int basePoints, int questBonusPoints, int totalEarnedPoints, @NonNull List<Quest> completedQuests) {
                         history.complete(historyId, stationId, stationName);
-                        if (binding == null) return;
-                        binding.qrLoadingOverlay.setVisibility(View.GONE);
+                        new DisposalSessionManager(appContext).clearPendingScan();
+                        submitting = false;
 
-                        // Clear pending disposal session
-                        new com.pinduoduo.trashgo.data.repository.DisposalSessionManager(requireContext()).clearPendingScan();
+                        if (binding == null) {
+                            return;
+                        }
+                        binding.qrLoadingOverlay.setVisibility(View.GONE);
+                        binding.btnConfirmQrScan.setEnabled(true);
 
                         String questNotice = null;
                         if (!completedQuests.isEmpty()) {
-                            StringBuilder sb = new StringBuilder("🎯 Quest Completed! ");
+                            StringBuilder sb = new StringBuilder("Quest completed: ");
                             for (Quest q : completedQuests) {
                                 sb.append(q.getTitle()).append(" (+").append(q.getRewardPoints()).append(" pts) ");
                             }
@@ -132,9 +147,13 @@ public class QrScanFragment extends Fragment {
 
                     @Override
                     public void onError(@NonNull String error) {
-                        if (binding == null) return;
+                        submitting = false;
+                        if (binding == null) {
+                            return;
+                        }
                         binding.qrLoadingOverlay.setVisibility(View.GONE);
-                        Toast.makeText(requireContext(), "Disposal Error: " + error, Toast.LENGTH_LONG).show();
+                        binding.btnConfirmQrScan.setEnabled(true);
+                        Toast.makeText(appContext, "Disposal Error: " + error, Toast.LENGTH_LONG).show();
                     }
                 }
         );

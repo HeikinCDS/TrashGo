@@ -107,6 +107,20 @@
     <View style="@style/Widget.TrashGo.Divider" />
 
     <TextView
+        android:id="@+id/settings_replay_tour"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingVertical="16dp"
+        android:background="?attr/selectableItemBackground"
+        android:clickable="true"
+        android:focusable="true"
+        android:text="@string/settings_replay_tour"
+        android:textSize="16sp"
+        android:textColor="@color/trashgo_primary" />
+
+    <View style="@style/Widget.TrashGo.Divider" />
+
+    <TextView
         style="@style/TextAppearance.TrashGo.Label"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

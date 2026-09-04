@@ -22,7 +22,6 @@ import com.pinduoduo.trashgo.util.GeoUtils;
 import java.util.Locale;
 
 public class DropOffDetailSheet extends BottomSheetDialogFragment {
-
     public static final String TAG = "DropOffDetailSheet";
 
     private static final String ARG_POINT_ID = "arg_point_id";

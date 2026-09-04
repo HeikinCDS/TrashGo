@@ -9,7 +9,6 @@ import androidx.annotation.Nullable;
 import com.pinduoduo.trashgo.data.model.WasteCategory;
 
 public class DisposalSessionManager {
-
     private static final String PREF_NAME = "trashgo_disposal_session";
     private static final String KEY_HAS_PENDING = "has_pending";
     private static final String KEY_CATEGORY = "pending_category";
