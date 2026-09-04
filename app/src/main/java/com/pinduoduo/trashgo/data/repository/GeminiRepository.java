@@ -12,8 +12,6 @@ import com.pinduoduo.trashgo.data.remote.GeminiResponse;
 import com.pinduoduo.trashgo.data.remote.RetrofitClient;
 import com.pinduoduo.trashgo.util.ImageUtils;
 
-import java.net.SocketTimeoutException;
-
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -89,11 +87,7 @@ public class GeminiRepository {
             @Override
             public void onFailure(Call<GeminiRawResponse> call, Throwable t) {
                 Log.e("GeminiAI", "Network error: " + t.getMessage());
-                if (t instanceof SocketTimeoutException) {
-                    callback.onError("The scan took too long. Check your internet connection and try again.");
-                } else {
-                    callback.onError("Unable to contact Gemini. Check your internet connection and try again.");
-                }
+                callback.onError("Network Error: " + t.getMessage());
             }
         });
     }

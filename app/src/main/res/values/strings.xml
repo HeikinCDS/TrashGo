@@ -125,4 +125,5 @@
     <string name="claim_mock_location">Mock locations are switched on. Turn them off to claim points.</string>
     <string name="claim_too_far">You need to be at the drop-off point. Get within 100 m and try again.</string>
     <string name="claim_cooldown">You\'ve already claimed here recently. Try again in a little while.</string>
+    <string name="qr_simulation_hint">Centre the station\'s QR code in the frame to confirm your drop-off.</string>
 </resources>

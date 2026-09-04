@@ -48,8 +48,19 @@ public class QuestRepository {
                     List<Quest> objectivesOnly = new ArrayList<>();
                     for (Quest q : cachedQuests) {
                         if (q.isObjectiveOfDay()) {
-                            // Ensure required target amount is 1
+                            // Fix target amount and title to reflect 1 item
                             q.setTargetAmount(1);
+                            if (q.getTitle() != null) {
+                                String t = q.getTitle();
+                                t = t.replace("4 Plastic items", "1 Plastic item")
+                                     .replace("5 Paper items", "1 Paper item")
+                                     .replace("5 Paper items", "1 Paper item")
+                                     .replace("3 Glass items", "1 Glass item")
+                                     .replace("3 Metal items", "1 Metal item")
+                                     .replace("4 E-Waste items", "1 E-Waste item")
+                                     .replace("3 Organic waste items", "1 Organic waste item");
+                                q.setTitle(t);
+                            }
                             if (q.getCurrentAmount() >= 1) {
                                 q.setCompleted(true);
                             }

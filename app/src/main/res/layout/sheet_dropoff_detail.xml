@@ -100,7 +100,7 @@
         tools:text="Plastic, Paper, Metal" />
 
     <com.google.android.material.button.MaterialButton
-        android:id="@+id/sheet_claim"
+        android:id="@+id/sheet_scan_qr"
         style="@style/Widget.TrashGo.Button.Primary"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

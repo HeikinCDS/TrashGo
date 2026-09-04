@@ -258,7 +258,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
             sheet.dismiss();
         });
 
-        v.findViewById(R.id.sheet_claim).setOnClickListener(btn -> {
+        v.findViewById(R.id.sheet_scan_qr).setOnClickListener(btn -> {
             sheet.dismiss();
             startClaim(p);
         });

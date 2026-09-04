@@ -11,8 +11,11 @@ import java.util.Locale;
 public final class DropOffVerifier {
 
     public static final String PAYLOAD_PREFIX = "TRASHGO:DROP_OFF:";
-    public static final double MAX_DISTANCE_METRES = 100d;
+    public static final double MAX_DISTANCE_METRES = 200d;
     public static final long COOLDOWN_MILLIS = 30L * 60L * 1000L;
+
+
+    public static boolean enforceDistance = false;
 
     private DropOffVerifier() {}
 
@@ -63,10 +66,12 @@ public final class DropOffVerifier {
             return VerificationResult.NO_LOCATION;
         }
 
-        double distance = GeoUtils.distanceMetres(
-                userLat, userLng, point.getLatitude(), point.getLongitude());
-        if (distance > MAX_DISTANCE_METRES) {
-            return VerificationResult.TOO_FAR;
+        if (enforceDistance) {
+            double distance = GeoUtils.distanceMetres(
+                    userLat, userLng, point.getLatitude(), point.getLongitude());
+            if (distance > MAX_DISTANCE_METRES) {
+                return VerificationResult.TOO_FAR;
+            }
         }
 
         if (lastClaimMillis > 0L && nowMillis - lastClaimMillis < COOLDOWN_MILLIS) {
