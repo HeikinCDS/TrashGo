@@ -80,10 +80,10 @@ public class ImageUtils {
     public static String processImage(Bitmap bitmap) {
 
         Bitmap resizedBitmap =
-                resizeBitmap(bitmap, 1024);
+                resizeBitmap(bitmap, 768);
 
         byte[] jpegBytes =
-                compressToJpeg(resizedBitmap, 80);
+                compressToJpeg(resizedBitmap, 70);
 
         return toBase64(jpegBytes);
     }

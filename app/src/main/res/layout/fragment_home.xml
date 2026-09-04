@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
+
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -29,6 +30,7 @@
             android:text="@string/home_title" />
 
         <!-- ===== Stat row ===== -->
+
         <View
             style="@style/Widget.TrashGo.Divider"
             android:layout_marginTop="26dp" />
@@ -126,6 +128,7 @@
 
         <View style="@style/Widget.TrashGo.Divider" />
 
+
         <TextView
             style="@style/TextAppearance.TrashGo.Title"
             android:layout_width="match_parent"
@@ -153,32 +156,7 @@
             app:iconSize="20dp"
             app:iconTint="@color/trashgo_on_primary" />
 
-        <!-- ===== Objective of the Day ===== -->
-        <TextView
-            style="@style/TextAppearance.TrashGo.Title"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="28dp"
-            android:text="🌟 Objective of the Day" />
 
-        <TextView
-            style="@style/TextAppearance.TrashGo.Caption"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="2dp"
-            android:text="Main daily challenge • Earn 100 bonus points!" />
-
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/home_objective_list"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:nestedScrollingEnabled="false"
-            android:overScrollMode="never"
-            tools:itemCount="1"
-            tools:listitem="@layout/item_quest" />
-
-        <!-- ===== Nearest Drop-off Points ===== -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -193,6 +171,8 @@
                 android:layout_weight="1"
                 android:text="@string/home_nearest" />
 
+            <!-- Tap target is padded out to 44dp tall even though the text is 13sp;
+                 a link the thumb misses is worse than no link. -->
             <TextView
                 android:id="@+id/home_see_all"
                 android:layout_width="wrap_content"
@@ -209,6 +189,7 @@
                 android:textColor="@color/trashgo_primary" />
 
         </LinearLayout>
+
 
         <TextView
             android:id="@+id/home_nearest_status"

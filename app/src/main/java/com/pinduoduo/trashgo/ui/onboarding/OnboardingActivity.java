@@ -92,7 +92,7 @@ public class    OnboardingActivity extends AppCompatActivity {
         boolean lastPage = position == pages.size() - 1;
         binding.backButton.setVisibility(position == 0 ? View.INVISIBLE : View.VISIBLE);
         binding.skipButton.setVisibility(lastPage ? View.INVISIBLE : View.VISIBLE);
-        binding.nextButton.setText(lastPage ? getString(R.string.get_started) : getString(R.string.next));
+        binding.nextButton.setText(lastPage ? R.string.get_started : R.string.next);
         updateIndicators(position);
     }
 

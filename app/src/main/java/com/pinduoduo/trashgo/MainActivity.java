@@ -8,6 +8,7 @@ import androidx.fragment.app.Fragment;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.pinduoduo.trashgo.databinding.ActivityMainBinding;
+import com.pinduoduo.trashgo.data.seed.DropOffPointSeeder;
 import com.pinduoduo.trashgo.ui.home.HomeFragment;
 import com.pinduoduo.trashgo.ui.leaderboard.LeaderboardFragment;
 import com.pinduoduo.trashgo.ui.map.MapFragment;
@@ -29,6 +30,10 @@ public class MainActivity extends AppCompatActivity {
         }
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
+
+        if (BuildConfig.DEBUG) {
+            DropOffPointSeeder.seedIfEmpty();
+        }
 
         binding.bottomNavigation.setOnItemSelectedListener(item -> {
             Fragment destination;

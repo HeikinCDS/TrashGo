@@ -84,20 +84,9 @@ public class ResultFragment extends Fragment {
         binding.resultTip.setText(tip == null || tip.trim().isEmpty()
                 ? getString(R.string.result_no_tip) : tip);
 
-        binding.resultFind.setText("Choose Disposal Location");
         binding.resultFind.setOnClickListener(v -> openMapForCategory());
         binding.resultAgain.setOnClickListener(v -> getParentFragmentManager().popBackStack());
         binding.resultClose.setOnClickListener(v -> closeToHome());
-
-        displayPendingPointsInfo(category != null ? category : WasteCategory.GENERAL);
-    }
-
-    private void displayPendingPointsInfo(@NonNull WasteCategory cat) {
-        int pts = com.pinduoduo.trashgo.data.repository.PointsRepositoryImpl.getCategoryPoints(cat);
-        if (binding == null) return;
-        binding.resultPointsEarned.setText("Step 1 Complete: +" + pts + " Points Pending! ⏳");
-        binding.resultQuestNotice.setText("📍 Choose a disposal location & scan station QR code to claim your points!");
-        binding.resultQuestNotice.setVisibility(View.VISIBLE);
     }
 
     private void showPhoto(@Nullable String path) {

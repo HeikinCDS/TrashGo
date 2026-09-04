@@ -1,55 +1,40 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="@color/trashgo_surface"
-    android:paddingTop="28dp">
+    android:background="@color/trashgo_surface">
 
-    <TextView
-        style="@style/TextAppearance.TrashGo.Display"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:paddingHorizontal="24dp"
-        android:text="@string/map_title" />
-
-    <TextView
-        android:id="@+id/map_filter_notice"
-        style="@style/TextAppearance.TrashGo.Body"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:paddingHorizontal="24dp"
-        android:layout_marginTop="4dp"
-        android:textColor="@color/trashgo_primary"
-        android:textStyle="bold"
-        tools:text="Showing disposal stations for: PLASTIC" />
-
-    <View
-        style="@style/Widget.TrashGo.Divider"
-        android:layout_marginTop="16dp" />
-
-    <TextView
-        android:id="@+id/map_status"
-        style="@style/TextAppearance.TrashGo.Caption"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:paddingHorizontal="24dp"
-        android:layout_marginTop="12dp"
-        android:visibility="gone"
-        tools:text="Loading stations..." />
-
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/map_dropoff_list"
+    <androidx.fragment.app.FragmentContainerView
+        android:id="@+id/map_container"
+        android:name="com.google.android.gms.maps.SupportMapFragment"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1"
+        android:layout_weight="55" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/trashgo_divider" />
+
+    <TextView
+        android:id="@+id/map_heading"
+        style="@style/TextAppearance.TrashGo.Label"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingHorizontal="24dp"
+        android:paddingTop="16dp"
+        android:paddingBottom="4dp"
+        tools:text="8 DROP-OFF POINTS" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recycler_dropoffs"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="45"
         android:clipToPadding="false"
-        android:paddingHorizontal="16dp"
-        android:paddingTop="8dp"
-        android:paddingBottom="16dp"
-        tools:itemCount="4"
+        android:paddingBottom="12dp"
         tools:listitem="@layout/item_dropoff" />
 
 </LinearLayout>

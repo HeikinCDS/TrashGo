@@ -100,19 +100,19 @@
         tools:text="Plastic, Paper, Metal" />
 
     <com.google.android.material.button.MaterialButton
-        android:id="@+id/sheet_scan_qr"
+        android:id="@+id/sheet_claim"
         style="@style/Widget.TrashGo.Button.Primary"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
-        android:text="Scan Station QR Code to Claim Points" />
+        android:layout_marginTop="24dp"
+        android:text="@string/claim_button" />
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/sheet_navigate"
         style="@style/Widget.TrashGo.Button.Tonal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="8dp"
         android:text="Navigate here" />
 
 </LinearLayout>
