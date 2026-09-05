@@ -58,14 +58,8 @@ public class DropOffVerifierTest {
 
     @Test
     public void rejectsUserTooFarAway() {
-        boolean previous = DropOffVerifier.enforceDistance;
-        try {
-            DropOffVerifier.enforceDistance = true;
-            assertEquals(VerificationResult.TOO_FAR,
-                    verify("TRASHGO:DROP_OFF:fict_block", LAT + 0.002, LNG, true, false, 0L));
-        } finally {
-            DropOffVerifier.enforceDistance = previous;
-        }
+        assertEquals(VerificationResult.TOO_FAR,
+                verify("TRASHGO:DROP_OFF:fict_block", LAT + 0.002, LNG, true, false, 0L));
     }
 
     @Test
@@ -99,14 +93,14 @@ public class DropOffVerifierTest {
     }
 
     @Test
-    public void allowsStationToServeANewScanImmediately() {
-        assertEquals(VerificationResult.OK,
+    public void blocksRepeatClaimWithinCooldown() {
+        assertEquals(VerificationResult.COOLDOWN,
                 verify("TRASHGO:DROP_OFF:fict_block", LAT, LNG, true, false,
                         NOW - 5 * 60 * 1000L));
     }
 
     @Test
-    public void allowsStationAfterLongDelay() {
+    public void allowsClaimOnceCooldownExpires() {
         assertEquals(VerificationResult.OK,
                 verify("TRASHGO:DROP_OFF:fict_block", LAT, LNG, true, false,
                         NOW - 31 * 60 * 1000L));
