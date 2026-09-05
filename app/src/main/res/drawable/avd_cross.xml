@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<animated-vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:drawable="@drawable/ic_cross_stroke">
+    <target
+        android:name="stroke_one"
+        android:animation="@animator/cross_draw_one" />
+    <target
+        android:name="stroke_two"
+        android:animation="@animator/cross_draw_two" />
+</animated-vector>

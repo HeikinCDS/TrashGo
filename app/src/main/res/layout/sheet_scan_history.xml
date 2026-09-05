@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:background="@drawable/bg_sheet_top"
+    android:paddingTop="10dp"
+    android:paddingBottom="20dp">
+
+    <View
+        android:layout_width="36dp"
+        android:layout_height="4dp"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginBottom="18dp"
+        android:background="@color/trashgo_divider_strong" />
+
+    <TextView
+        style="@style/TextAppearance.TrashGo.Title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingHorizontal="24dp"
+        android:text="@string/history_title" />
+
+    <TextView
+        android:id="@+id/sheet_history_status"
+        style="@style/TextAppearance.TrashGo.Caption"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingHorizontal="24dp"
+        android:layout_marginTop="4dp"
+        tools:text="12 scans saved on this phone" />
+
+    <View
+        style="@style/Widget.TrashGo.Divider"
+        android:layout_marginTop="16dp" />
+
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingHorizontal="24dp"
+        android:clipToPadding="false">
+
+        <LinearLayout
+            android:id="@+id/sheet_history_entries"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingBottom="8dp"
+            android:orientation="vertical" />
+
+    </androidx.core.widget.NestedScrollView>
+
+    <View style="@style/Widget.TrashGo.Divider" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/sheet_history_close"
+        style="@style/Widget.TrashGo.Button.Tonal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="24dp"
+        android:layout_marginTop="16dp"
+        android:text="@string/history_close" />
+
+</LinearLayout>
