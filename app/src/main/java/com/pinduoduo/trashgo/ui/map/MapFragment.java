@@ -343,6 +343,9 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
                     @Override
                     public void onAwarded(int pointsAwarded, long newTotal, int newStreak) {
                         history.complete(historyId, point.getId(), point.getName());
+                        // Consume this waste scan, rather than locking the physical station.
+                        new com.pinduoduo.trashgo.data.repository.DisposalSessionManager(
+                                requireContext()).clearPendingScan();
                         if (!isAdded()) return;
                         showClaimResult(true,
                                 getString(R.string.claim_success_headline, pointsAwarded),
