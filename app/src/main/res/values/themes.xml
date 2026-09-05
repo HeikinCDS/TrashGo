@@ -25,6 +25,18 @@
         <item name="android:windowBackground">@color/trashgo_surface</item>
     </style>
 
+    <!-- Always light because TrashGo currently uses a light-only screen palette. -->
+    <style name="ThemeOverlay.TrashGo.Walkthrough"
+        parent="ThemeOverlay.Material3.MaterialAlertDialog">
+        <item name="colorSurface">@color/trashgo_surface</item>
+        <item name="colorOnSurface">@color/trashgo_on_surface</item>
+        <item name="colorOnSurfaceVariant">@color/trashgo_on_surface_variant</item>
+        <item name="colorPrimary">@color/trashgo_primary</item>
+        <item name="android:textColorPrimary">@color/trashgo_on_surface</item>
+        <item name="android:textColorSecondary">@color/trashgo_on_surface_variant</item>
+        <item name="android:windowBackground">@color/trashgo_surface</item>
+    </style>
+
     <style name="TextAppearance.TrashGo.Display" parent="TextAppearance.Material3.HeadlineSmall">
         <item name="android:textSize">28sp</item>
         <item name="android:textColor">@color/trashgo_on_surface</item>
