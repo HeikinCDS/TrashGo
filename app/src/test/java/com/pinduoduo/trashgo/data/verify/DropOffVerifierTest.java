@@ -7,6 +7,7 @@ import com.pinduoduo.trashgo.data.model.DropOffPoint;
 import com.pinduoduo.trashgo.data.model.WasteCategory;
 import com.pinduoduo.trashgo.util.PointsTable;
 
+import org.junit.Before;
 import org.junit.Test;
 
 import java.util.Arrays;
@@ -16,6 +17,12 @@ public class DropOffVerifierTest {
     private static final double LAT = 4.3366214;
     private static final double LNG = 101.1421110;
     private static final long NOW = 1_700_000_000_000L;
+
+    @Before
+    public void enableAllRules() {
+        DropOffVerifier.enforceDistance = true;
+        DropOffVerifier.enforceCooldown = true;
+    }
 
     private DropOffPoint point() {
         return new DropOffPoint("fict_block", "FICT Block", LAT, LNG,
@@ -104,6 +111,14 @@ public class DropOffVerifierTest {
         assertEquals(VerificationResult.OK,
                 verify("TRASHGO:DROP_OFF:fict_block", LAT, LNG, true, false,
                         NOW - 31 * 60 * 1000L));
+    }
+
+    @Test
+    public void allowsRepeatClaimWhenCooldownIsSwitchedOff() {
+        DropOffVerifier.enforceCooldown = false;
+        assertEquals(VerificationResult.OK,
+                verify("TRASHGO:DROP_OFF:fict_block", LAT, LNG, true, false,
+                        NOW - 5 * 60 * 1000L));
     }
 
     @Test

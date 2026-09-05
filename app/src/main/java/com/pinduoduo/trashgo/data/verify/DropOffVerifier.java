@@ -14,6 +14,7 @@ public final class DropOffVerifier {
     public static final long COOLDOWN_MILLIS = 30L * 60L * 1000L;
 
     public static boolean enforceDistance = false;
+    public static boolean enforceCooldown = false;
 
     private DropOffVerifier() {}
 
@@ -71,7 +72,9 @@ public final class DropOffVerifier {
             }
         }
 
-        if (lastClaimMillis > 0L && nowMillis - lastClaimMillis < COOLDOWN_MILLIS) {
+        if (enforceCooldown
+                && lastClaimMillis > 0L
+                && nowMillis - lastClaimMillis < COOLDOWN_MILLIS) {
             return VerificationResult.COOLDOWN;
         }
 
